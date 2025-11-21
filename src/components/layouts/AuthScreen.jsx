@@ -1,12 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import { SignInCard } from "./SignInCard";
-import { SignUpCard } from "./SignUpCard";
 import Image from "next/image";
 
 export const AuthScreen = () => {
-  const [state, setState] = useState("signIn");
 
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen space-y-6 px-4 bg-[#3C0753]">
@@ -35,11 +32,9 @@ export const AuthScreen = () => {
       </div>
 
       <div className="md:h-auto md:w-[420px] relative z-10">
-        {state === "signIn" ? (
-          <SignInCard setState={setState} />
-        ) : (
-          <SignUpCard setState={setState} />
-        )}
+     
+          <SignInCard  />
+    
       </div>
     </div>
   );
