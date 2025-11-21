@@ -1,0 +1,67 @@
+body {
+    background-color: #151345;
+}
+
+.sidebar {
+    background-color: #151345;
+    border-color: unset;
+    border-right-width: unset;
+    border-right-style: none;
+}
+
+/* app-shell.css */
+.page-content {
+  padding: 20px;
+  /* background: #f5f6fa; */
+}
+
+.main-shell {
+  /* background: white; */
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+}
+
+.menu-light {
+    background-color: unset;
+}
+
+.menu-light .ant-menu-item-selected {
+  background-color: #3b82f6; /* blue-500 */
+  color: #fff;
+  font-weight: bold;
+}
+
+/* Show menu text even when sidebar is collapsed */
+.ant-menu-inline-collapsed > .ant-menu-item .ant-menu-title-content,
+.ant-menu-inline-collapsed > .ant-menu-item-group .ant-menu-item .ant-menu-title-content,
+.ant-menu-inline-collapsed > .ant-menu-submenu .ant-menu-submenu-title .ant-menu-title-content {
+  opacity: 1 !important; /* override Ant Design */
+  transition: none !important; /* remove fade animation */
+}
+/* Force sidebar menu items to align left, both collapsed and expanded */
+.sidebar .ant-menu-item,
+.sidebar .ant-menu-submenu-title {
+  justify-content: flex-start !important;
+  text-align: left !important;
+  padding-inline-start: 16px !important; /* spacing from left edge */
+}
+
+/* When sidebar is collapsed */
+.sidebar .ant-menu-inline-collapsed > .ant-menu-item,
+.sidebar .ant-menu-inline-collapsed > .ant-menu-submenu-title {
+  padding-inline-start: 18px !important; /* smaller spacing for collapsed icons */
+}
+
+.page-content {
+  margin-left: 200px;
+  margin-top: 64px;   
+  min-height: calc(100vh - 64px);
+  padding: 24px;
+  
+  /* Background image */
+  background-image: url('/icon/sidebar.png'); 
+  background-size: cover;       
+  background-position: center;  
+  background-repeat: no-repeat; 
+}
