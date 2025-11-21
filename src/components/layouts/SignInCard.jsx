@@ -2,6 +2,6 @@ import React from 'react'
 
 export const SignInCard = () => {
   return (
-    <div>SignUpCard</div>
+    <div>SignIpCard</div>
   )
 }
