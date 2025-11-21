@@ -18,7 +18,6 @@ export default function HomePage() {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        paddingTop: 32,
         width: "100%",
       }}
     >
