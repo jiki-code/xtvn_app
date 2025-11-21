@@ -2,7 +2,6 @@
 
 import { Form, Input, Button, Typography, Card } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
-
 const { Title, Text } = Typography;
 
 export function SignInCard () {
@@ -33,13 +32,13 @@ export function SignInCard () {
         >
           {/* EMAIL / USERNAME */}
           <Form.Item
-            label="Email"
             name="email"
             rules={[
               { required: true, message: "Please enter your email" },
               { type: "email", message: "Email is not valid" },
             ]}
           >
+              <Typography level={5}>Email</Typography>
             <Input
               prefix={<UserOutlined className="text-slate-500" />}
               placeholder="enter your password"
@@ -49,13 +48,13 @@ export function SignInCard () {
 
           {/* PASSWORD */}
           <Form.Item
-            label="Password"
             name="password"
             rules={[
               { required: true, message: "Please enter your password" },
               { min: 6, message: "Password must be at least 6 characters" },
             ]}
           >
+             <Typography level={3}>Password</Typography>
             <Input.Password
               prefix={<LockOutlined className="text-slate-500" />}
               placeholder="enter your password"
