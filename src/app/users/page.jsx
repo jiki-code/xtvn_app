@@ -9,7 +9,7 @@ const columns = [
     key: "id",
   },
   {
-    title: "Tên",
+    title: "Name",
     dataIndex: "name",
     key: "name",
   },
@@ -19,7 +19,7 @@ const columns = [
     key: "email",
   },
   {
-    title: "Trạng thái",
+    title: "Status",
     dataIndex: "status",
     key: "status",
     render: (status) => (
