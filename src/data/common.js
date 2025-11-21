@@ -1,0 +1,1 @@
+export const AUTH_ROUTES = ["/auth", "/register", "/404"];
