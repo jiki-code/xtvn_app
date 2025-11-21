@@ -1,83 +1,43 @@
 @import "tailwindcss";
 
 :root {
-   --background: 240 10% 98%;
-    --background-secondary: 245 15% 96%;
-    --foreground: 215 28% 27%; /* slate 700 */
+  --background: 240 10% 98%;
+  --foreground: 215 28% 27%; /* slate 700 */
+  --color-start-check-in: #3c6cba;
+  --color-end-check-in: #030653;
+  --text-check-in: #ffea1d;
+  --color-start-break-in: #ebd97f;
+  --color-end-break-in: #9f8144;
+  --text-break-in: #000000;
 
-    --card: 0 0% 100%;
-    --card-foreground: 215 28% 27%;
-    --card-shadow: 218 36% 18%; /* slate 800 */
+  --color-start-check-out: #e5e5e5;
+  --color-end-check-out: #9e9e9e;
+  --text-check-out: #000000;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 215 28% 27%;
+  --color-start-break-out: #ec1c24;
+  --color-end-break-out: #5e0000;
+  --text-break-out: #fff;
 
-    /* Beautiful gradient colors */
-    --primary: 258 89% 65%;
-    --primary-light: 255 92% 76%;
-    --primary-dark: 263 69% 50%;
-    --primary-foreground: 0 0% 100%;
+  --primary-blue: #0162E8;
+  --primary-blue-hover: #0045A6;
 
-    --secondary: 240 5% 96%;
-    --secondary-foreground: 240 6% 10%;
+  --danger-red: #9F2C2C;
+  --danger-red-hover: #9F2C2C;
 
-    --muted: 240 5% 96%;
-    --muted-foreground: 215 18% 47%; /* slate-500 */
-
-    --accent: 204 94% 94%;
-    --accent-foreground: 204 100% 40%;
-
-    --destructive: 0 85% 60%;
-    --destructive-foreground: 0 0% 98%;
-
-    --success: 142 76% 36%;
-    --success-foreground: 0 0% 98%;
-
-    --info: 226, 100%, 63%;
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 214 32% 91%; /* slate-200 */
-    --input: 210 40% 96%;
-    --ring: 258 89% 65%;
+  --danger-red-second: #DE3C3C;
+  --danger-red-second-hover-: #EE335E
 
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --card: var(--card);
-
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-   --background: 222.2 84% 4.9%;
+    --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
   }
 }
 
@@ -152,3 +112,80 @@ body {
   background-color: #475569;
 }
 
+/* button custom  new */
+.button-check-in {
+  background: linear-gradient(
+    90deg,
+    var(--color-start-check-in) 0%,
+    var(--color-end-check-in) 100%
+  );
+  color: var(--text-check-in);
+}
+
+.button-check-in:hover {
+  background: var(--color-end-check-in);
+}
+
+.button-break-in {
+  background: linear-gradient(
+    90deg,
+    var(--color-start-break-in) 0%,
+    var(--color-end-break-in) 100%
+  );
+  color: var(--text-break-in);
+}
+
+.button-break-in:hover {
+  background: var(--color-end-break-in);
+}
+
+.button-check-out {
+  background: linear-gradient(
+    90deg,
+    var(--color-start-check-out) 0%,
+    var(--color-end-check-out) 100%
+  );
+  color: var(--text-check-out);
+}
+
+.button-check-out:hover {
+  background: var(--color-end-check-out);
+}
+
+.button-break-out {
+  background: linear-gradient(
+    90deg,
+    var(--color-start-break-out) 0%,
+    var(--color-end-break-out) 100%
+  );
+  color: var(--text-break-out);
+}
+
+.button-break-out:hover {
+  background: var(--color-end-break-out);
+}
+
+
+.button-primary {
+  background-color:  var(--primary-blue);
+}
+
+.button-primary:hover {
+  background: var(--primary-blue-hover);
+}
+
+.button-danger {
+  background-color:  var(--danger-red);
+}
+
+.button-danger:hover {
+  background: var(--danger-red-hover);
+}
+
+.button-danger-second {
+  background-color:  var(--danger-red-second);
+}
+
+.button-danger-second:hover {
+  background: var(--danger-red-second-hover);
+}
