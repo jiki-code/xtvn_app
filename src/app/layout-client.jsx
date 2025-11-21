@@ -1,27 +1,28 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import AppShell from "@/components/layouts/AppShell";
 import {ToastProvider} from "@/components/providers/ToastProvider";
 import {AUTH_ROUTES} from "@/data/common"
 
 export default function LayoutClient({ children }) {
-  const pathname = usePathname() || "/";
+  const [ready, setReady] = useState(false);
+  const pathname = usePathname();
 
-  const isAuthRoute = AUTH_ROUTES.some((route) =>
-    pathname.startsWith(route)
-  );
+  useEffect(() => {
+    setReady(true);
+  }, []);
 
-  if (isAuthRoute) {
-    return (
-      <>
-        <ToastProvider />
-        {children}
-      </>
-    );
-  }
+  if (!ready) return null;
 
-  return (
+  const isAuth = AUTH_ROUTES.some((r) => pathname.startsWith(r));
+
+  return isAuth ? (
+    <>
+      {children}
+    </>
+  ) : (
     <>
       <ToastProvider />
       <AppShell>{children}</AppShell>

@@ -5,23 +5,23 @@ import { LockOutlined, UserOutlined } from "@ant-design/icons";
 
 const { Title, Text } = Typography;
 
-export const SignInCard = ({ setState }) => {
+export function SignInCard () {
   const [form] = Form.useForm();
 
   const onFinish = (values) => {
-    console.log("Sign in values:", values);
-    // TODO: call API / dispatch redux / toast...
+    console.log("Login values:", values);
+   
   };
 
   return (
-    <div className=" flex items-center justify-center bg-slate-100 rounded-xl">
-      <Card className="w-full max-w-md shadow-xl border border-slate-200">
-        <div className="mb-2 text-center">
+     <div className="flex items-center justify-center bg-slate-100 rounded-xl">
+      <Card className="w-full max-w-md shadow-lg border border-slate-200">
+        <div className="mb-4 text-center">
           <Title level={3} className="!mb-1">
             Sign in to XTVN
           </Title>
           <Text type="secondary">
-            Enter your credentials to access the dashboard.
+            Please sign in to continue to the dashboard.
           </Text>
         </div>
 
@@ -31,7 +31,7 @@ export const SignInCard = ({ setState }) => {
           onFinish={onFinish}
           requiredMark={false}
         >
-          {/* Email */}
+          {/* EMAIL / USERNAME */}
           <Form.Item
             label="Email"
             name="email"
@@ -42,12 +42,12 @@ export const SignInCard = ({ setState }) => {
           >
             <Input
               prefix={<UserOutlined className="text-slate-500" />}
-              placeholder="you@example.com"
+              placeholder="enter your password"
               size="large"
             />
           </Form.Item>
 
-          {/* Password */}
+          {/* PASSWORD */}
           <Form.Item
             label="Password"
             name="password"
@@ -58,19 +58,31 @@ export const SignInCard = ({ setState }) => {
           >
             <Input.Password
               prefix={<LockOutlined className="text-slate-500" />}
-              placeholder="••••••••"
+              placeholder="enter your password"
               size="large"
             />
           </Form.Item>
 
-          {/* Submit */}
-          <Form.Item className="mt-3">
-            <Button color="cyan" variant="solid" className="w-full py-2">
-              Sign In
+          {/* SUBMIT BUTTON */}
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              size="large"
+              className="w-full"
+            >
+              Sign in
             </Button>
           </Form.Item>
         </Form>
+
+        {/* FOOTER */}
+        <div className="mt-2 text-center">
+          <Text type="secondary" className="text-xs">
+            By continuing, you agree to our Terms & Privacy Policy.
+          </Text>
+        </div>
       </Card>
     </div>
   );
-};
+}
