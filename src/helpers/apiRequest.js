@@ -125,7 +125,7 @@ function handleAuthRedirect() {
       localStorage.removeItem("authToken");
       localStorage.removeItem("refreshToken");
     } catch {}
-    window.location.replace(`/login`);
+    window.location.replace(`/auth`);
   }
   throw new Error("Auth required");
 }

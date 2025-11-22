@@ -12,8 +12,6 @@ export function getDataUser() {
         const data = await reqGetAllUsers()
         setUsers(data?.data?.users)
         setPagination(data.pagination)
-        console.log("🚀 ~ getListUser ~ data:", data)
-
     }
     useEffect(() => {
         if (fetched.current) return;
@@ -24,3 +22,4 @@ export function getDataUser() {
 
     return { users, pagination }
 }
+
