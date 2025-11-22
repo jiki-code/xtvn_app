@@ -125,3 +125,7 @@ body {
   /* text-align: center; */
   font-size: 1.2rem;
 }
+
+.ant-input-outlined:focus-within {
+  background-color: #fff;
+}
