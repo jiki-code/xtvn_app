@@ -17,7 +17,7 @@ import {
 const { Sider } = Layout;
 
 const items = [
-  { key: "/", icon: <HomeOutlined />, label: <Link href="/">Home</Link> },
+  { key: "/dashboard", icon: <HomeOutlined />, label: <Link href="/">Home</Link> },
   {
     key: "/activity",
     icon: <ThunderboltOutlined />,
