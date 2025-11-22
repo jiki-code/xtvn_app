@@ -13,7 +13,7 @@ async function refreshAccessToken() {
       if (!refreshToken) return null;
 
       const refreshRes = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/refresh`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/refresh-token`,
         {
           method: "POST",
           headers: {
