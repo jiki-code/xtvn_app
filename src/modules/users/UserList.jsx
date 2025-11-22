@@ -1,16 +1,22 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Table, Card, Button, Space, Popconfirm, message } from "antd";
+import { Table, Card, Button, Space, Popconfirm, message, Select } from "antd";
 import {
   reqGetAllUsers,
   reqCreateUser,
   reqUpdateUser,
   reqDeleteUser,
+  reqResetPassword,
 } from "@/feautures/api/users";
 import { columnsUser } from "./tables/_comlums";
-import UserFormModal from "./components/FormModal";
+import UserFormModal from "./components/FormAdd";
+import FormResetPassword from "./components/FormResetPassword";
+
 import { toast } from "react-toastify";
+import { roleList } from "@/data/common";
+import styles from "./userList.module.css";
+import { cn } from "@/lib/utils";
 const UserList = () => {
   const [data, setData] = useState([]);
   const [page, setPage] = useState(1); // current page
@@ -24,28 +30,29 @@ const UserList = () => {
 
   // modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingUser, setEditingUser] = useState(null); // null = tạo mới
+  const [isReset, setIsReset] = useState(false);
+  const [IdUser, setIdUser] = useState(0);
+
+  const [editingUser, setEditingUser] = useState(null); // null
   const [submitLoading, setSubmitLoading] = useState(false);
 
   const fetchUsers = async (currentPage = 1, currentPageSize = 10) => {
     try {
       setLoading(true);
       const queryParams = {
-        page: String(currentPage),
-        limit: String(currentPageSize),
+        page: currentPage,
+        limit: currentPageSize,
       };
-
       const res = await reqGetAllUsers(queryParams);
       const dataRes = res.data || res;
-
       const users = dataRes.users || dataRes.data?.users || [];
-      const pg = dataRes.pagination || dataRes.data?.pagination || {};
+      const pagi = dataRes.pagination || dataRes.data?.pagination || {};
 
       setData(Array.isArray(users) ? users : []);
       setPagination({
-        current: pg.currentPage || currentPage,
-        pageSize: pg.limit || currentPageSize,
-        total: pg.total || users.length || 0,
+        current: pagi.currentPage || currentPage,
+        pageSize: pagi.limit || currentPageSize,
+        total: pagi.total || users.length || 0,
       });
     } catch (err) {
       toast.error(err?.message);
@@ -87,10 +94,9 @@ const UserList = () => {
       setSubmitLoading(true);
 
       values.name = values.username;
-        setIsModalOpen(false);
+      setIsModalOpen(false);
       await reqCreateUser(values);
       toast.success("Added user succesfully");
-
       fetchUsers(page, pageSize);
     } catch (err) {
       toast.error(err.message);
@@ -99,21 +105,76 @@ const UserList = () => {
     }
   };
 
+  const handleReset = async (value) => {
+    const payload = {
+      newPassword: value,
+    };
+    try {
+      setSubmitLoading(true);
+      await reqResetPassword(IdUser, payload);
+      toast.success("Reset password succesfully");
+      setIsReset(false);
+      fetchUsers(page, pageSize);
+      setIdUser(0);
+    } catch (err) {
+      toast.error(err.message);
+    } finally {
+      setSubmitLoading(false);
+    }
+  };
+
+  const onReset = (id) => {
+    setIsReset(true);
+    setIdUser(id);
+  };
+
   const columns = [
     ...columnsUser,
+    {
+      title: "Role",
+      key: "role",
+      width: 160,
+      render: (_, record) => {
+        const handleRoleChange = async (newRole) => {
+          try {
+            await reqUpdateUser(record.id, { role: newRole });
+            toast.success(`User ${record.name} updated to ${newRole}`);
+            fetchUsers(page, pageSize);
+          } catch (err) {
+            toast.error("Failed to update role");
+          }
+        };
+
+        return (
+          <Select
+            className={cn("w-full", styles.customSelect)}
+            value={record.role}
+            onChange={handleRoleChange}
+            options={roleList}
+          ></Select>
+        );
+      },
+    },
     {
       title: "Actions",
       key: "actions",
       width: 160,
       render: (_, record) => (
         <Space>
+          <Button
+            onClick={() => onReset(record.id)}
+            color="default"
+            variant="solid"
+          >
+            Reset password
+          </Button>
           <Popconfirm
-            title="Are you sure you want to delete this user??"
+            title="Are you sure you want to delete this user?"
             okText="Yes"
             cancelText="No"
             onConfirm={() => handleDelete(record.id)}
           >
-            <Button type="link" danger>
+            <Button color="danger" variant="solid">
               Delete
             </Button>
           </Popconfirm>
@@ -125,12 +186,7 @@ const UserList = () => {
   return (
     <div>
       <Card
-        style={{
-          background: "#ffffff", 
-          borderRadius: 8,
-          border: "none",
-          boxShadow: "0 2px 8px rgba(0,0,0,0.08)", 
-        }}
+        className={styles.card}
         extra={
           <Button type="primary" onClick={handleAdd}>
             + Add user
@@ -149,26 +205,13 @@ const UserList = () => {
             showSizeChanger: true,
             showTotal: (total) => `Total ${total} users`,
           }}
-          style={{
-            background: "#ffffff", 
-            color: "#000000",      
-          }}
-          rowClassName={() => "custom-table-row"}
+          classNames={styles.style_table}
           onChange={handleTableChange}
         />
 
-        {/* <UserFormModal
-          open={isModalOpen}
-          initialValues={editingUser}
-          onCancel={() => {
-            setIsModalOpen(false);
-            setEditingUser(null);
-          }}
-          onSubmit={handleSubmitUser}
-          confirmLoading={submitLoading}
-        /> */}
         <UserFormModal
           open={isModalOpen}
+          centered
           initialValues={editingUser}
           onCancel={() => {
             setIsModalOpen(false);
@@ -176,20 +219,15 @@ const UserList = () => {
           }}
           onSubmit={handleSubmitUser}
           confirmLoading={submitLoading}
-          modalProps={{
-            centered: true,        // center the modal
-            width: 500,            // custom width
-            style: { borderRadius: 16 },       // outer modal wrapper
-            bodyStyle: {
-              background: "#ffffff",  // white background
-              color: "#000000",       // black text
-              padding: 24,            // inner padding
-              borderRadius: 16,
-            },
-            footer: null,           // remove default buttons
-          }}
         />
-
+        <FormResetPassword
+          open={isReset}
+          onCancel={() => {
+            setIsReset(false);
+          }}
+          onSubmit={handleReset}
+          confirmLoading={submitLoading}
+        />
       </Card>
     </div>
   );
