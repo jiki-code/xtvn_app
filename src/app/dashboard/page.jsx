@@ -504,27 +504,8 @@ export default function HomePage() {
         }}
         onClick={() =>
           showModal({
+            type: "break",  // <-- set type instead of content
             title: "Break In Detail",
-            content: (
-              <>
-                <Radio.Group
-                  onChange={(e) => setBreakType(e.target.value)}
-                  value={breakType}
-                  style={{ display: "flex", flexDirection: "column", gap: 12 }}
-                >
-                  <Radio value="break">Break</Radio>
-                  {breakType === "break" && (
-                    <Input
-                      placeholder="Enter reason"
-                      value={breakReason}
-                      onChange={(e) => setBreakReason(e.target.value)}
-                      style={{ marginTop: 8, width: "100%" }}
-                    />
-                  )}
-                  <Radio value="toilet">Toilet</Radio>
-                </Radio.Group>
-              </>
-            ),
             onOk: handleBreakOk,
           })
         }
