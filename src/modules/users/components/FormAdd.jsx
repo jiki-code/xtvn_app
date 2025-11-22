@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { Modal, Form, Input, Select } from "antd";
+import { roleList } from "@/data/common";
 
 const UserFormModal = ({
   open,
@@ -45,7 +46,6 @@ const UserFormModal = ({
       onOk={handleOk}
       okText={initialValues ? "Update" : "Create"}
       confirmLoading={confirmLoading}
-      destroyOnClose
     >
       <Form layout="vertical" form={form}>
         <Form.Item
@@ -75,10 +75,8 @@ const UserFormModal = ({
             placeholder="Select Role"
             className="w-full"
             onChange={(value) => console.log("Selected:", value)}
+            options={roleList}
           >
-            <Option value="admin">Admin</Option>
-            <Option value="lead">Lead</Option>
-            <Option value="user">Member</Option>
           </Select>
         </Form.Item>
       </Form>
