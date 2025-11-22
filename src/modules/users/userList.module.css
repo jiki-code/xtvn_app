@@ -80,3 +80,11 @@
   background-color: #fff;
   color: #151345;
 }
+
+:global(.ant-btn-variant-text) {
+  color: #c7c7c7 !important;
+  background-color: #fff;
+  border: none;
+  font-size: 18px !important;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.02);
+}
