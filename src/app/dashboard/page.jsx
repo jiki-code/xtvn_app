@@ -30,20 +30,6 @@ export default function HomePage() {
   const day = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
   // ---- Functions ----
-  //const handleCheckIn = () => setIsModalVisible(true);
-  // const handleCheckIn = () => {
-  //   showModal({
-  //     title: "Check In",
-  //     content: (
-  //       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, color: "#000" }}>
-  //         <Image src="/icon/v-icon.png" alt="Success" width={90} height={90} style={{ marginBottom: 10 }} />
-  //         <h2 style={{ margin: "0 0 8px 0", fontSize: "1.8rem", fontWeight: "bold" }}>Success!</h2>
-  //         <p>You have successfully checked in.</p>
-  //       </div>
-  //     ),
-  //     onOk: hideModal,
-  //   });
-  // };
   const handleCheckIn = () => {
     showModal({
       type: "checkin",
@@ -197,8 +183,6 @@ export default function HomePage() {
         return null;
     }
   };
-
-  // ---- Effects ----
 
   // Clock and Date update
   useEffect(() => {
@@ -422,33 +406,6 @@ export default function HomePage() {
         Check In
       </Button>
 
-      {/* Check-in Modal */}
-      {/* <Modal
-        open={isModalVisible}
-        onCancel={handleOk}
-        footer={null}
-        modalRender={() => (
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              background: "#fff",
-              padding: 20,
-              borderRadius: 16,
-              textAlign: "center",
-              color: "#000",
-            }}
-          >
-            <Image src="/icon/v-icon.png" alt="Success" width={90} height={90} style={{ marginBottom: 10 }} />
-            <h2 style={{ margin: "0 0 8px 0", fontSize: "1.8rem", fontWeight: "bold" }}>Success!</h2>
-            <p style={{ margin: 0 }}>You have successfully checked in.</p>
-            <Button onClick={handleOk} style={{ marginTop: 16, width: 100 }}>Confirm</Button>
-          </div>
-        )}
-      /> */}
-
       {/* Random Popup Modal */}
       {/* <Modal
         open={showPopup}
@@ -473,22 +430,6 @@ export default function HomePage() {
           <Button onClick={handlePopupClick} style={{ marginTop: 16 }}>OK</Button>
         </div>
       </Modal> */}
-      {/* <Button
-        style={{
-          background: "linear-gradient(75deg, #EBD97F, #9F8144)",
-          border: "1px solid #fff",
-          color: "#000",
-          fontWeight: "bold",
-          padding: "20px 0",
-          fontSize: "1.2rem",
-          marginBottom: "15px",
-          width: "220px",
-          textAlign: "center",
-        }}
-        onClick={() => setIsBreakModalVisible(true)}
-      >
-        Break In
-      </Button> */}
 
       <Button
         style={{
@@ -504,7 +445,7 @@ export default function HomePage() {
         }}
         onClick={() =>
           showModal({
-            type: "break",  // <-- set type instead of content
+            type: "break", 
             title: "Break In Detail",
             onOk: handleBreakOk,
           })
@@ -512,31 +453,6 @@ export default function HomePage() {
       >
         Break In
       </Button>
-
-
-      {/* <Modal
-        open={isBreakModalVisible}
-        onCancel={handleBreakCancel}
-        onOk={handleBreakOk}
-        title="Break In Detail"
-      >
-        <Radio.Group
-          onChange={(e) => setBreakType(e.target.value)}
-          value={breakType}
-          style={{ display: "flex", flexDirection: "column", gap: 12 }}
-        >
-          <Radio value="break">Break</Radio>
-          {breakType === "break" && (
-        <Input
-          placeholder="Enter reason"
-          value={breakReason}
-          onChange={(e) => setBreakReason(e.target.value)}
-          style={{ marginTop: 0, width: "100%"}}
-        />
-      )}
-        <Radio value="toilet">Toilet</Radio>
-        </Radio.Group>
-      </Modal> */}
 
       <Button
         style={{
