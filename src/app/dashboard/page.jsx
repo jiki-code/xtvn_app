@@ -31,40 +31,57 @@ export default function HomePage() {
 
   // ---- Functions ----
   //const handleCheckIn = () => setIsModalVisible(true);
+  // const handleCheckIn = () => {
+  //   showModal({
+  //     title: "Check In",
+  //     content: (
+  //       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, color: "#000" }}>
+  //         <Image src="/icon/v-icon.png" alt="Success" width={90} height={90} style={{ marginBottom: 10 }} />
+  //         <h2 style={{ margin: "0 0 8px 0", fontSize: "1.8rem", fontWeight: "bold" }}>Success!</h2>
+  //         <p>You have successfully checked in.</p>
+  //       </div>
+  //     ),
+  //     onOk: hideModal,
+  //   });
+  // };
   const handleCheckIn = () => {
     showModal({
+      type: "checkin",
       title: "Check In",
-      content: (
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, color: "#000" }}>
-          <Image src="/icon/v-icon.png" alt="Success" width={90} height={90} style={{ marginBottom: 10 }} />
-          <h2 style={{ margin: "0 0 8px 0", fontSize: "1.8rem", fontWeight: "bold" }}>Success!</h2>
-          <p>You have successfully checked in.</p>
-        </div>
-      ),
       onOk: hideModal,
     });
+  };
+
+  const handleBreakOk = () => {
+    console.log("Break Type:", breakType, "Reason:", breakReason);
+    hideModal();
   };
 
   const handleOk = () => setIsModalVisible(false);
 
   const [modalConfig, setModalConfig] = useState({
     visible: false,
+    type: "",
     title: "",
     content: null,
     onOk: null,
+    extraData: null,
   });
 
-  const showModal = ({ title, content, onOk }) => {
+  const showModal = ({ type, title, onOk, extraData }) => {
     setModalConfig({
       visible: true,
+      type,
       title,
-      content,
       onOk,
+      extraData: extraData || null,
     });
   };
 
   const hideModal = () => {
     setModalConfig((prev) => ({ ...prev, visible: false }));
+    setBreakType(""); 
+    setBreakReason("");
   };
 
   const generateRandomPopup = () => {
@@ -126,17 +143,59 @@ export default function HomePage() {
     if (popupCountRef.current < 2) scheduleNextPopup();
   };
 
-  const handleBreakOk = () => {
-    console.log("Selected:", breakType, "Reason:", breakReason);
-    setIsBreakModalVisible(false);
-    setBreakType("");
-    setBreakReason("");
-  };
+  // const handleBreakOk = () => {
+  //   console.log("Selected:", breakType, "Reason:", breakReason);
+  //   setIsBreakModalVisible(false);
+  //   setBreakType("");
+  //   setBreakReason("");
+  // };
 
   const handleBreakCancel = () => {
     setIsBreakModalVisible(false);
     setBreakType("");
     setBreakReason("");
+  };
+
+  // ---- Render Modal Content Dynamically ----
+  const renderModalContent = () => {
+    switch (modalConfig.type) {
+      case "checkin":
+        return (
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, color: "#000" }}>
+            <Image src="/icon/v-icon.png" alt="Success" width={90} height={90} style={{ marginBottom: 10 }} />
+            <h2 style={{ margin: 0, fontSize: "1.8rem", fontWeight: "bold" }}>Success!</h2>
+            <p>You have successfully checked in.</p>
+          </div>
+        );
+      case "break":
+        return (
+          <Radio.Group
+            onChange={(e) => setBreakType(e.target.value)}
+            value={breakType}
+            style={{ display: "flex", flexDirection: "column", gap: 12 }}
+          >
+            <Radio value="break">Break</Radio>
+            {breakType === "break" && (
+              <Input
+                placeholder="Enter reason"
+                value={breakReason}
+                onChange={(e) => setBreakReason(e.target.value)}
+                style={{ marginTop: 8, width: "100%" }}
+              />
+            )}
+            <Radio value="toilet">Toilet</Radio>
+          </Radio.Group>
+        );
+      case "popup":
+        return (
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
+            <h3>{modalConfig.extraData?.message || "Popup message"}</h3>
+            {modalConfig.extraData?.showMissed && <p>Missed time: {modalConfig.extraData.missedTime}s</p>}
+          </div>
+        );
+      default:
+        return null;
+    }
   };
 
   // ---- Effects ----
@@ -510,16 +569,17 @@ export default function HomePage() {
       >
         Check Out
       </Button>
+
       <Modal
         open={modalConfig.visible}
         title={modalConfig.title}
         onCancel={hideModal}
         onOk={() => {
           if (modalConfig.onOk) modalConfig.onOk();
-          hideModal();
         }}
+        centered
       >
-        {modalConfig.content}
+        {renderModalContent()}
       </Modal>
 
     </div>
