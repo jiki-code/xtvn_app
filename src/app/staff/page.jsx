@@ -30,8 +30,6 @@ export default function StaffPage() {
           }}
           style={{ margin: 24, fontSize: 16 }}
         />
-
-
         <Content style={{ padding: 24 }}>
           <Title level={2} style={{ marginBottom: 16, color: "#000000", fontWeight: 700}}>
             Staff Management

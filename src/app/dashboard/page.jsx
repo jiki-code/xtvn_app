@@ -1,16 +1,96 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button, Modal } from "antd";
 
 export default function HomePage() {
+  // ---- State ----
   const [currentDate, setCurrentDate] = useState("");
   const [currentDay, setCurrentDay] = useState(0);
   const [currentTime, setCurrentTime] = useState("");
 
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState("");
+  const [missedTime, setMissedTime] = useState(0);
+  const [startCounting, setStartCounting] = useState(false);
+  const [nextPopupTime, setNextPopupTime] = useState(null);
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  // ---- Refs ----
+  const popupTimerRef = useRef(null);
+  const missedTimerRef = useRef(null);
+  const popupCountRef = useRef(0);
+
   const day = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
+  // ---- Functions ----
+  const handleCheckIn = () => setIsModalVisible(true);
+  const handleOk = () => setIsModalVisible(false);
+
+  /*const generateRandomPopup = () => {
+    const now = new Date();
+    const startDate = new Date(now);
+    startDate.setHours(9, 0, 0, 0);
+    const endDate = new Date(now);
+    endDate.setHours(17, 0, 0, 0);
+
+    const effectiveStart = now > startDate ? now : startDate;
+    if (effectiveStart >= endDate) return null;
+
+    return new Date(
+      effectiveStart.getTime() +
+        Math.random() * (endDate.getTime() - effectiveStart.getTime())
+    );
+  };*/
+
+  const generateRandomPopup = () => {
+    const now = new Date();
+    const startDate = new Date(now);
+    startDate.setSeconds(now.getSeconds() + 1); // start 1s from now
+    const endDate = new Date(now);
+    endDate.setSeconds(now.getSeconds() + 10); // end 10s from now
+
+    const effectiveStart = now > startDate ? now : startDate;
+    if (effectiveStart >= endDate) return null;
+
+    return new Date(
+      effectiveStart.getTime() + Math.random() * (endDate.getTime() - effectiveStart.getTime())
+    );
+  };
+
+
+  const scheduleNextPopup = () => {
+    if (popupCountRef.current >= 2) return;
+
+    const next = generateRandomPopup();
+    if (next) {
+      setNextPopupTime(next);
+      console.log("Next popup scheduled at:", next.toLocaleTimeString());
+    }
+  };
+
+  const handlePopupClick = () => {
+    setShowPopup(false);
+
+    if (startCounting) {
+      alert(`You missed ${missedTime} seconds!`);
+    } else {
+      alert("Checked in on time!");
+    }
+
+    if (missedTimerRef.current) clearInterval(missedTimerRef.current);
+
+    setMissedTime(0);
+    setStartCounting(false);
+
+    if (popupCountRef.current < 2) scheduleNextPopup();
+  };
+
+  // ---- Effects ----
+
+  // Clock and Date update
   useEffect(() => {
     const date = new Date();
     setCurrentDay(date.getDay());
@@ -25,17 +105,57 @@ export default function HomePage() {
 
     const interval = setInterval(() => {
       const now = new Date();
-      setCurrentTime(now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" }));
+      setCurrentTime(
+        now.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        })
+      );
     }, 1000);
 
     return () => clearInterval(interval);
   }, []);
 
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  // Trigger popup at scheduled time
+  useEffect(() => {
+    if (!nextPopupTime || popupCountRef.current >= 2) return;
 
-  const handleCheckIn = () => setIsModalVisible(true);
-  const handleOk = () => setIsModalVisible(false);
+    const now = new Date();
+    const delay = Math.max(nextPopupTime.getTime() - now.getTime(), 0);
 
+    if (popupTimerRef.current) clearTimeout(popupTimerRef.current);
+
+    popupTimerRef.current = setTimeout(() => {
+      setPopupMessage(`Popup at ${new Date().toLocaleTimeString()}`);
+      setShowPopup(true);
+      popupCountRef.current += 1;
+
+      // Start counting missed time after 60s
+      setTimeout(() => {
+        setStartCounting(true);
+        missedTimerRef.current = setInterval(() => {
+          setMissedTime((prev) => prev + 1);
+        }, 1000);
+      }, 5000);
+    }, delay);
+
+    return () => {
+      if (popupTimerRef.current) clearTimeout(popupTimerRef.current);
+    };
+  }, [nextPopupTime]);
+
+  // Schedule first popup on mount
+  useEffect(() => {
+    scheduleNextPopup();
+  }, []);
+
+  useEffect(() => {
+    setNextPopupTime(new Date()); // popup appears immediately
+  }, []);
+
+
+  // ---- Render ----
   return (
     <div
       style={{
@@ -45,16 +165,16 @@ export default function HomePage() {
         alignItems: "center",
       }}
     >
-      {/* CENTER LOGO */}
+      {/* Logo */}
       <Image
         src="/icon/X Team - logo.png"
         alt="Logo"
         width={100}
         height={100}
-        style={{ marginBottom: 25, marginTop: 20 }}
+        style={{ marginBottom: 35, marginTop: 35 }}
       />
 
-      {/* DATE BOX */}
+      {/* Date Box */}
       <div
         style={{
           width: "90%",
@@ -62,7 +182,7 @@ export default function HomePage() {
           position: "relative",
           borderRadius: "16px",
           overflow: "hidden",
-          marginBottom: 15
+          marginBottom: 15,
         }}
       >
         <Image
@@ -70,14 +190,8 @@ export default function HomePage() {
           alt="Date Background"
           width={450}
           height={150}
-          style={{
-            width: "100%",
-            height: "auto",
-            display: "block",
-          }}
+          style={{ width: "100%", height: "auto", display: "block" }}
         />
-
-        {/* Centered Date Text */}
         <div
           style={{
             position: "absolute",
@@ -94,21 +208,21 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* TIME BOX */}
+      {/* Time Box */}
       <div
         style={{
           width: "90%",
           maxWidth: "450px",
-          aspectRatio: "2 / 1", 
+          aspectRatio: "2 / 1",
           position: "relative",
           borderRadius: "16px",
           overflow: "hidden",
           backgroundImage: "url('/icon/bg-clock.png')",
-          backgroundSize: "contain",        
+          backgroundSize: "contain",
           backgroundRepeat: "no-repeat",
           display: "flex",
-          flexDirection: "column",     
-          alignItems: "center",        
+          flexDirection: "column",
+          alignItems: "center",
           padding: "40px",
           color: "white",
           textAlign: "center",
@@ -121,16 +235,16 @@ export default function HomePage() {
             display: "flex",
             justifyContent: "space-between",
             width: "100%",
-            padding: "0 45px 0 45px",
+            padding: "0 45px",
           }}
         >
-          {["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"].map((d, i) => (
+          {day.map((d, i) => (
             <span
               key={i}
               style={{
                 fontSize: 16,
-                color: i === currentDay ? "#000" : "#000",
                 fontWeight: i === currentDay ? "bold" : "normal",
+                color: "#000",
               }}
             >
               {d}
@@ -143,7 +257,7 @@ export default function HomePage() {
           style={{
             display: "flex",
             justifyContent: "center",
-            alignItems: "flex-end", 
+            alignItems: "flex-end",
             fontSize: "4.3rem",
             fontFamily: "'Roboto Mono', monospace",
             fontWeight: "bold",
@@ -162,7 +276,8 @@ export default function HomePage() {
             {currentTime.split(" ")[1]}
           </span>
         </div>
-        {/* Vietnam UTC with small logo */}
+
+        {/* Timezone */}
         <div
           style={{
             display: "flex",
@@ -178,79 +293,96 @@ export default function HomePage() {
           <span>(UTC+07:00) Asia/VietNam </span>
         </div>
       </div>
+
+      {/* Buttons */}
       <Button
         style={{
           background: "linear-gradient(85deg, #3C6CBA, #151345)",
-          border: "1px solid #fff", 
+          border: "1px solid #fff",
           color: "#FFEA1D",
           fontWeight: "bold",
           padding: "20px 0",
           fontSize: "1.2rem",
           marginBottom: "15px",
           width: "220px",
-          textAlign: "center", 
+          textAlign: "center",
         }}
         onClick={handleCheckIn}
       >
         Check In
       </Button>
-    
+
+      {/* Check-in Modal */}
       <Modal
         open={isModalVisible}
         onCancel={handleOk}
-        footer={null} 
-        modalRender={(modal) => (
+        footer={null}
+        modalRender={() => (
           <div
             style={{
               display: "flex",
               flexDirection: "column",
-              alignItems: "center", 
-              justifyContent: "center", 
-              background: "linear-gradient(120deg, #fff, #fff)",
+              alignItems: "center",
+              justifyContent: "center",
+              background: "#fff",
               padding: 20,
               borderRadius: 16,
               textAlign: "center",
               color: "#000",
             }}
           >
-            <Image
-              src="/icon/v-icon.png"
-              alt="Success"
-              width={90}
-              height={90}
-              style={{ marginBottom: 10 }} 
-            />
+            <Image src="/icon/v-icon.png" alt="Success" width={90} height={90} style={{ marginBottom: 10 }} />
             <h2 style={{ margin: "0 0 8px 0", fontSize: "1.8rem", fontWeight: "bold" }}>Success!</h2>
             <p style={{ margin: 0 }}>You have successfully checked in.</p>
-            <Button
-              onClick={handleOk}
-              style={{ marginTop: 16, width: 100 }}
-            >
-              Confirm
-            </Button>
+            <Button onClick={handleOk} style={{ marginTop: 16, width: 100 }}>Confirm</Button>
           </div>
         )}
       />
 
+      {/* Random Popup Modal */}
+      <Modal
+        open={showPopup}
+        footer={null}
+        closable={false}
+      >
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            background: "#fff",
+            borderRadius: 16,
+            textAlign: "center",
+            color: "#000",
+          }}
+        >
+          <h1 style={{ fontSize: "1.5rem", marginBottom: "12px" }}>Are you still working?</h1>
+          <p style={{ fontSize: "1rem"}}>{popupMessage}</p>
+          {startCounting && <p>Missed time: {missedTime}s</p>}
+          <Button onClick={handlePopupClick} style={{ marginTop: 16 }}>OK</Button>
+        </div>
+      </Modal>
       <Button
         style={{
           background: "linear-gradient(75deg, #EBD97F, #9F8144)",
-          border: "1px solid #fff", 
+          border: "1px solid #fff",
           color: "#000",
           fontWeight: "bold",
           padding: "20px 0",
           fontSize: "1.2rem",
           marginBottom: "15px",
           width: "220px",
-          textAlign: "center", 
+          textAlign: "center",
         }}
       >
         Break In
       </Button>
+
       <Button
         style={{
           background: "linear-gradient(75deg, #E5E5E5, #9E9E9E)",
-          border: "1px solid #fff", 
+          border: "1px solid #fff",
           color: "#000",
           fontWeight: "bold",
           padding: "20px 60px",
@@ -259,8 +391,6 @@ export default function HomePage() {
       >
         Check Out
       </Button>
-      
     </div>
   );
 }
-
