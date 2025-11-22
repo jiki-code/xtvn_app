@@ -15,6 +15,7 @@ import FormResetPassword from "./components/FormResetPassword";
 
 import { toast } from "react-toastify";
 import { roleList } from "@/data/common";
+import styles from "./userList.module.css";
 const UserList = () => {
   const [data, setData] = useState([]);
   const [page, setPage] = useState(1); // current page
@@ -149,9 +150,8 @@ const UserList = () => {
             className="w-full border border-white rounded-sm"
             value={record.role}
             onChange={handleRoleChange}
-              options={roleList}
-          >
-          </Select>
+            options={roleList}
+          ></Select>
         );
       },
     },
@@ -185,9 +185,8 @@ const UserList = () => {
 
   return (
     <div>
-      <h1 className="page-title">User managers</h1>
-
       <Card
+        className={styles.card}
         extra={
           <Button type="primary" onClick={handleAdd}>
             + Add user
@@ -206,6 +205,11 @@ const UserList = () => {
             showSizeChanger: true,
             showTotal: (total) => `Total ${total} users`,
           }}
+          rowClassName={(record, index) => {
+            if (record.role === "admin") return styles.rowAdmin;
+            return index % 2 === 0 ? styles.rowEven : styles.rowOdd;
+          }}
+          className={styles.style_table}
           onChange={handleTableChange}
         />
 

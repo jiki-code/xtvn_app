@@ -198,14 +198,14 @@ export default function HomePage() {
       <Modal
         open={isModalVisible}
         onCancel={handleOk}
-        footer={null} // remove default buttons
+        footer={null} 
         modalRender={(modal) => (
           <div
             style={{
               display: "flex",
               flexDirection: "column",
-              alignItems: "center", // center horizontally
-              justifyContent: "center", // optional: center vertically if needed
+              alignItems: "center", 
+              justifyContent: "center", 
               background: "linear-gradient(120deg, #fff, #fff)",
               padding: 20,
               borderRadius: 16,
@@ -218,7 +218,7 @@ export default function HomePage() {
               alt="Success"
               width={90}
               height={90}
-              style={{ marginBottom: 10 }} // spacing below image
+              style={{ marginBottom: 10 }} 
             />
             <h2 style={{ margin: "0 0 8px 0", fontSize: "1.8rem", fontWeight: "bold" }}>Success!</h2>
             <p style={{ margin: 0 }}>You have successfully checked in.</p>

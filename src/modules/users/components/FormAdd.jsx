@@ -76,8 +76,7 @@ const UserFormModal = ({
             className="w-full"
             onChange={(value) => console.log("Selected:", value)}
             options={roleList}
-          >
-          </Select>
+          ></Select>
         </Form.Item>
       </Form>
     </Modal>
