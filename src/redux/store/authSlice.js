@@ -3,17 +3,15 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   loading: false,
   user: {
-    ban_reason: "",
-    banned: false,
-    createdAt: "",
-    email: "",
-    email_verified: false,
-    id: "",
-    image: "",
-    name: "",
-    role: "",
-    updatedAt: "",
-    refreshToken: "",
+    "id": 0,
+    "name": "",
+    "email": "",
+    "currentSessionId": null,
+    "createdAt": "",
+    "updatedAt": "",
+    "role": "",
+    "refreshToken": "",
+    "accessToken": "",
   },
 };
 

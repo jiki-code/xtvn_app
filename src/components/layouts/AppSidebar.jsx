@@ -17,24 +17,24 @@ import {
 const { Sider } = Layout;
 
 const items = [
-  { key: "/", icon: <HomeOutlined />, label: <Link href="/">Home</Link> },
+  { key: "/dashboard", icon: <HomeOutlined />, label: <Link href="/dashboard">Home</Link> },
   {
     key: "/activity",
     icon: <ThunderboltOutlined />,
     label: <Link href="/activity">Website</Link>,
   },
   {
-    key: "/users",
+    key: "/user1",
     icon: <UserOutlined />,
     label: <Link href="/attendances">Attendances</Link>,
   },
   {
-    key: "/users",
+    key: "/user2",
     icon: <UserOutlined />,
     label: <Link href="/staff">Staff</Link>,
   },
   {
-    key: "/users",
+    key: "/user3",
     icon: <UserOutlined />,
     label: <Link href="/policies">Company Policies</Link>,
   },

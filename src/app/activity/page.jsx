@@ -1,7 +1,8 @@
 "use client";
 
 import { Card, List } from "antd";
-
+import { useState } from "react";
+import {getDataUser} from "./services/getDataUser"
 const data = [
   "User A vừa đăng nhập",
   "User B tạo mới 1 bài viết",
@@ -9,6 +10,9 @@ const data = [
 ];
 
 export default function ActivityPage() {
+const [user, setUser] = useState([])
+const {users} = getDataUser()
+console.log(users)
   return (
     <div>
       <h1 className="page-title">Activity</h1>
