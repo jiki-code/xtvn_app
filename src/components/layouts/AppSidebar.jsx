@@ -24,17 +24,17 @@ const items = [
     label: <Link href="/activity">Website</Link>,
   },
   {
-    key: "/users",
+    key: "/user1",
     icon: <UserOutlined />,
     label: <Link href="/attendances">Attendances</Link>,
   },
   {
-    key: "/users",
+    key: "/user2",
     icon: <UserOutlined />,
     label: <Link href="/staff">Staff</Link>,
   },
   {
-    key: "/users",
+    key: "/user3",
     icon: <UserOutlined />,
     label: <Link href="/policies">Company Policies</Link>,
   },
