@@ -16,6 +16,7 @@ import FormResetPassword from "./components/FormResetPassword";
 import { toast } from "react-toastify";
 import { roleList } from "@/data/common";
 import styles from "./userList.module.css";
+import { cn } from "@/lib/utils";
 const UserList = () => {
   const [data, setData] = useState([]);
   const [page, setPage] = useState(1); // current page
@@ -140,14 +141,13 @@ const UserList = () => {
             toast.success(`User ${record.name} updated to ${newRole}`);
             fetchUsers(page, pageSize);
           } catch (err) {
-            console.error(err);
             toast.error("Failed to update role");
           }
         };
 
         return (
           <Select
-            className="w-full border border-white rounded-sm"
+            className={cn("w-full", styles.customSelect)}
             value={record.role}
             onChange={handleRoleChange}
             options={roleList}
@@ -174,7 +174,7 @@ const UserList = () => {
             cancelText="No"
             onConfirm={() => handleDelete(record.id)}
           >
-            <Button type="link" danger>
+            <Button color="danger" variant="solid">
               Delete
             </Button>
           </Popconfirm>
@@ -205,11 +205,7 @@ const UserList = () => {
             showSizeChanger: true,
             showTotal: (total) => `Total ${total} users`,
           }}
-          rowClassName={(record, index) => {
-            if (record.role === "admin") return styles.rowAdmin;
-            return index % 2 === 0 ? styles.rowEven : styles.rowOdd;
-          }}
-          className={styles.style_table}
+          classNames={styles.style_table}
           onChange={handleTableChange}
         />
 

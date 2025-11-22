@@ -47,6 +47,60 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.ant-table-wrapper .ant-table-thead > tr > th::before {
+  background-color: #e5e7eb;
+ 
+}
+
+.ant-input-outlined {
+  background-color: #ffffff !important; 
+  color: #333 !important;            
+  border: 1px solid #2d2d6b;  
+  border-radius: 8px;
+  padding: 8px 12px;
+  transition: all 0.2s ease;
+}
+
+/* Hover và focus effect */
+.ant-input-outlined:hover {
+  border-color: #1677ff;
+}
+
+.ant-input-outlined:focus,
+.ant-input-outlined:focus-within {
+  border-color: #1677ff;
+  box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.25);
+  outline: none;
+}
+
+.ant-form-item-label > label {
+  color: #333 !important;          
+  font-size: 15px !important;      
+  font-weight: 600 !important;   
+  text-transform: capitalize; 
+}
+
+.ant-pagination .ant-pagination-item-active {
+  font-weight: 600;
+  background-color: #1677ff !important; 
+  color: #fff;               
+  transition: all 0.2s ease;
+}
+
+.ant-pagination .ant-pagination-item-active a {
+  color: #ffffff;            
+}
+
+.ant-pagination .ant-pagination-item-active:hover {
+  border-color: #4096ff;    
+  background-color: #1e1b63;
+}
+
+.ant-select-selection-item {
+  color: #333 !important
+}
+
+
 /* ===========================
    SIDEBAR COLORS (LIGHT)
    =========================== */
@@ -189,3 +243,4 @@ body {
 .button-danger-second:hover {
   background: var(--danger-red-second-hover);
 }
+

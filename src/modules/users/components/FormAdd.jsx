@@ -3,7 +3,6 @@
 import { useEffect } from "react";
 import { Modal, Form, Input, Select } from "antd";
 import { roleList } from "@/data/common";
-
 const UserFormModal = ({
   open,
   initialValues,
