@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
-import { Button, Modal } from "antd";
+import { Button, Modal, Radio, Input } from "antd";
 
 export default function HomePage() {
   // ---- State ----
@@ -18,6 +18,10 @@ export default function HomePage() {
 
   const [isModalVisible, setIsModalVisible] = useState(false);
 
+  const [isBreakModalVisible, setIsBreakModalVisible] = useState(false);
+  const [breakType, setBreakType] = useState(""); // "break" or "toilet"
+  const [breakReason, setBreakReason] = useState("");
+
   // ---- Refs ----
   const popupTimerRef = useRef(null);
   const missedTimerRef = useRef(null);
@@ -29,7 +33,7 @@ export default function HomePage() {
   const handleCheckIn = () => setIsModalVisible(true);
   const handleOk = () => setIsModalVisible(false);
 
-  /*const generateRandomPopup = () => {
+  const generateRandomPopup = () => {
     const now = new Date();
     const startDate = new Date(now);
     startDate.setHours(9, 0, 0, 0);
@@ -43,9 +47,9 @@ export default function HomePage() {
       effectiveStart.getTime() +
         Math.random() * (endDate.getTime() - effectiveStart.getTime())
     );
-  };*/
+  };
 
-  const generateRandomPopup = () => {
+  /*const generateRandomPopup = () => {
     const now = new Date();
     const startDate = new Date(now);
     startDate.setSeconds(now.getSeconds() + 1); // start 1s from now
@@ -58,7 +62,7 @@ export default function HomePage() {
     return new Date(
       effectiveStart.getTime() + Math.random() * (endDate.getTime() - effectiveStart.getTime())
     );
-  };
+  };*/
 
 
   const scheduleNextPopup = () => {
@@ -86,6 +90,19 @@ export default function HomePage() {
     setStartCounting(false);
 
     if (popupCountRef.current < 2) scheduleNextPopup();
+  };
+
+  const handleBreakOk = () => {
+    console.log("Selected:", breakType, "Reason:", breakReason);
+    setIsBreakModalVisible(false);
+    setBreakType("");
+    setBreakReason("");
+  };
+
+  const handleBreakCancel = () => {
+    setIsBreakModalVisible(false);
+    setBreakType("");
+    setBreakReason("");
   };
 
   // ---- Effects ----
@@ -150,9 +167,9 @@ export default function HomePage() {
     scheduleNextPopup();
   }, []);
 
-  useEffect(() => {
-    setNextPopupTime(new Date()); // popup appears immediately
-  }, []);
+  // useEffect(() => {
+  //   setNextPopupTime(new Date()); // popup appears immediately
+  // }, []);
 
 
   // ---- Render ----
@@ -375,9 +392,39 @@ export default function HomePage() {
           width: "220px",
           textAlign: "center",
         }}
+        onClick={() => setIsBreakModalVisible(true)}
       >
         Break In
       </Button>
+
+      <Modal
+        open={isBreakModalVisible}
+        onCancel={handleBreakCancel}
+        onOk={handleBreakOk}
+        title="Break In Detail"
+      >
+        <Radio.Group
+          onChange={(e) => setBreakType(e.target.value)}
+          value={breakType}
+          style={{ display: "flex", flexDirection: "column", gap: 12 }}
+        >
+          {/* Break radio */}
+          <Radio value="break">Break</Radio>
+
+          {/* Input box is separate, shown only when break is selected */}
+          {breakType === "break" && (
+        <Input
+          placeholder="Enter reason"
+          value={breakReason}
+          onChange={(e) => setBreakReason(e.target.value)}
+          style={{ marginTop: 0, width: "100%"}}
+        />
+      )}
+
+        {/* Toilet radio */}
+        <Radio value="toilet">Toilet</Radio>
+        </Radio.Group>
+      </Modal>
 
       <Button
         style={{

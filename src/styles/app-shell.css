@@ -99,3 +99,29 @@ body {
 .ant-modal .ant-modal-content {
   background-color: #fff;
 }
+.ant-modal .ant-modal-header {
+  background-color: #fff;
+  color: #000;
+}
+
+.ant-modal .ant-modal-title {
+  color: #000;
+}
+.ant-radio-wrapper {
+  color: #000;
+}
+
+.ant-input-outlined {
+  background-color: #fff;
+  color: #000;
+}
+
+.ant-input-outlined:hover {
+  background-color: #fff;
+  color: #000;
+}
+
+.ant-modal .ant-modal-title {
+  /* text-align: center; */
+  font-size: 1.2rem;
+}
