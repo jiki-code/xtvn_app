@@ -6,7 +6,7 @@ export const columnsUser = [
     key: "id",
   },
   {
-    title: "Name",
+    title: "User Name",
     dataIndex: "name",
     key: "name",
   },
@@ -19,6 +19,15 @@ export const columnsUser = [
     title: "Created At",
     dataIndex: "createdAt",
     key: "createdAt",
+    render: (value) => {
+      if (!value) return "-";
+      return formatDateTimeStamp(value, true)
+    },
+  },
+    {
+    title: "Updated At",
+    dataIndex: "updatedAt",
+    key: "updatedAt",
     render: (value) => {
       if (!value) return "-";
       return formatDateTimeStamp(value, true)
