@@ -30,8 +30,42 @@ export default function HomePage() {
   const day = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
   // ---- Functions ----
-  const handleCheckIn = () => setIsModalVisible(true);
+  //const handleCheckIn = () => setIsModalVisible(true);
+  const handleCheckIn = () => {
+    showModal({
+      title: "Check In",
+      content: (
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, color: "#000" }}>
+          <Image src="/icon/v-icon.png" alt="Success" width={90} height={90} style={{ marginBottom: 10 }} />
+          <h2 style={{ margin: "0 0 8px 0", fontSize: "1.8rem", fontWeight: "bold" }}>Success!</h2>
+          <p>You have successfully checked in.</p>
+        </div>
+      ),
+      onOk: hideModal,
+    });
+  };
+
   const handleOk = () => setIsModalVisible(false);
+
+  const [modalConfig, setModalConfig] = useState({
+    visible: false,
+    title: "",
+    content: null,
+    onOk: null,
+  });
+
+  const showModal = ({ title, content, onOk }) => {
+    setModalConfig({
+      visible: true,
+      title,
+      content,
+      onOk,
+    });
+  };
+
+  const hideModal = () => {
+    setModalConfig((prev) => ({ ...prev, visible: false }));
+  };
 
   const generateRandomPopup = () => {
     const now = new Date();
@@ -330,7 +364,7 @@ export default function HomePage() {
       </Button>
 
       {/* Check-in Modal */}
-      <Modal
+      {/* <Modal
         open={isModalVisible}
         onCancel={handleOk}
         footer={null}
@@ -354,10 +388,10 @@ export default function HomePage() {
             <Button onClick={handleOk} style={{ marginTop: 16, width: 100 }}>Confirm</Button>
           </div>
         )}
-      />
+      /> */}
 
       {/* Random Popup Modal */}
-      <Modal
+      {/* <Modal
         open={showPopup}
         footer={null}
         closable={false}
@@ -379,8 +413,8 @@ export default function HomePage() {
           {startCounting && <p>Missed time: {missedTime}s</p>}
           <Button onClick={handlePopupClick} style={{ marginTop: 16 }}>OK</Button>
         </div>
-      </Modal>
-      <Button
+      </Modal> */}
+      {/* <Button
         style={{
           background: "linear-gradient(75deg, #EBD97F, #9F8144)",
           border: "1px solid #fff",
@@ -395,9 +429,52 @@ export default function HomePage() {
         onClick={() => setIsBreakModalVisible(true)}
       >
         Break In
+      </Button> */}
+
+      <Button
+        style={{
+          background: "linear-gradient(75deg, #EBD97F, #9F8144)",
+          border: "1px solid #fff",
+          color: "#000",
+          fontWeight: "bold",
+          padding: "20px 0",
+          fontSize: "1.2rem",
+          marginBottom: "15px",
+          width: "220px",
+          textAlign: "center",
+        }}
+        onClick={() =>
+          showModal({
+            title: "Break In Detail",
+            content: (
+              <>
+                <Radio.Group
+                  onChange={(e) => setBreakType(e.target.value)}
+                  value={breakType}
+                  style={{ display: "flex", flexDirection: "column", gap: 12 }}
+                >
+                  <Radio value="break">Break</Radio>
+                  {breakType === "break" && (
+                    <Input
+                      placeholder="Enter reason"
+                      value={breakReason}
+                      onChange={(e) => setBreakReason(e.target.value)}
+                      style={{ marginTop: 8, width: "100%" }}
+                    />
+                  )}
+                  <Radio value="toilet">Toilet</Radio>
+                </Radio.Group>
+              </>
+            ),
+            onOk: handleBreakOk,
+          })
+        }
+      >
+        Break In
       </Button>
 
-      <Modal
+
+      {/* <Modal
         open={isBreakModalVisible}
         onCancel={handleBreakCancel}
         onOk={handleBreakOk}
@@ -408,10 +485,7 @@ export default function HomePage() {
           value={breakType}
           style={{ display: "flex", flexDirection: "column", gap: 12 }}
         >
-          {/* Break radio */}
           <Radio value="break">Break</Radio>
-
-          {/* Input box is separate, shown only when break is selected */}
           {breakType === "break" && (
         <Input
           placeholder="Enter reason"
@@ -420,11 +494,9 @@ export default function HomePage() {
           style={{ marginTop: 0, width: "100%"}}
         />
       )}
-
-        {/* Toilet radio */}
         <Radio value="toilet">Toilet</Radio>
         </Radio.Group>
-      </Modal>
+      </Modal> */}
 
       <Button
         style={{
@@ -438,6 +510,18 @@ export default function HomePage() {
       >
         Check Out
       </Button>
+      <Modal
+        open={modalConfig.visible}
+        title={modalConfig.title}
+        onCancel={hideModal}
+        onOk={() => {
+          if (modalConfig.onOk) modalConfig.onOk();
+          hideModal();
+        }}
+      >
+        {modalConfig.content}
+      </Modal>
+
     </div>
   );
 }
