@@ -124,9 +124,13 @@ const UserList = () => {
 
   return (
     <div>
-      <h1 className="page-title">User managers</h1>
-
       <Card
+        style={{
+          background: "#ffffff", 
+          borderRadius: 8,
+          border: "none",
+          boxShadow: "0 2px 8px rgba(0,0,0,0.08)", 
+        }}
         extra={
           <Button type="primary" onClick={handleAdd}>
             + Add user
@@ -145,9 +149,24 @@ const UserList = () => {
             showSizeChanger: true,
             showTotal: (total) => `Total ${total} users`,
           }}
+          style={{
+            background: "#ffffff", 
+            color: "#000000",      
+          }}
+          rowClassName={() => "custom-table-row"}
           onChange={handleTableChange}
         />
 
+        {/* <UserFormModal
+          open={isModalOpen}
+          initialValues={editingUser}
+          onCancel={() => {
+            setIsModalOpen(false);
+            setEditingUser(null);
+          }}
+          onSubmit={handleSubmitUser}
+          confirmLoading={submitLoading}
+        /> */}
         <UserFormModal
           open={isModalOpen}
           initialValues={editingUser}
@@ -157,7 +176,20 @@ const UserList = () => {
           }}
           onSubmit={handleSubmitUser}
           confirmLoading={submitLoading}
+          modalProps={{
+            centered: true,        // center the modal
+            width: 500,            // custom width
+            style: { borderRadius: 16 },       // outer modal wrapper
+            bodyStyle: {
+              background: "#ffffff",  // white background
+              color: "#000000",       // black text
+              padding: 24,            // inner padding
+              borderRadius: 16,
+            },
+            footer: null,           // remove default buttons
+          }}
         />
+
       </Card>
     </div>
   );

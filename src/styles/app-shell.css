@@ -13,7 +13,7 @@ body {
 }
 
 .main-shell {
-  padding: 24px;
+  /* padding: 24px; */
   border-radius: 12px;
   box-shadow: 0 4px 14px rgba(0,0,0,0.05);
 }
@@ -53,7 +53,7 @@ body {
   margin-left: 200px;
   margin-top: 50px;   
   min-height: calc(100vh - 54px);
-  padding: 24px;
+  /* padding: 24px; */
   
   /* Background image */
   background-image: url('/icon/sidebar.png'); 
@@ -64,4 +64,35 @@ body {
 
 .ant-menu-light.ant-menu-root.ant-menu-vertical {
     border-inline-end: 0px;
+}
+/* .ant-table-wrapper table {
+  border: 1px solid #eee;
+} */
+.ant-table-wrapper .ant-table {
+  border-radius: 0;
+}
+.ant-card .ant-card-head {
+  border-bottom: 0px;
+}
+.custom-table-row {
+  color: #000000;
+}
+
+.ant-table-thead > tr > th {
+  color: #000000; 
+  background: #ffffff; 
+  font-weight: bold;
+  border-radius: none;
+}
+
+.ant-table-tbody > tr > td {
+  color: #000000; 
+  background: #ffffff; 
+}
+.ant-table-wrapper .ant-table-tbody >tr >td {
+  border: 1px solid #eee;
+  padding: 2px 8px; 
+}
+.ant-table-wrapper .ant-table-thead >tr >th {
+  padding: 8px 8px; 
 }
