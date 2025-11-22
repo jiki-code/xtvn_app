@@ -122,8 +122,10 @@ body {
 }
 
 .ant-modal .ant-modal-title {
-  /* text-align: center; */
+  text-align: center;
   font-size: 1.2rem;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
 }
 
 .ant-input-outlined:focus-within {
