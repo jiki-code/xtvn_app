@@ -1,41 +1,29 @@
 "use client";
 
-import { SignInCard } from "./SignInCard";
+import { Card, Layout } from "antd";
 import Image from "next/image";
+import { SignInCard } from "./SignInCard";
+
+const { Content } = Layout;
 
 export const AuthScreen = () => {
-
   return (
-    <div className="relative flex flex-col items-center justify-center min-h-screen space-y-6 px-4 bg-[#3C0753]">
-      <Image
-        src="/Vector.png"
-        alt="Top Right"
-        className="absolute top-0 right-0 h-screen pointer-events-none"
-        style={{
-          width: "auto",
-          objectFit: "contain",
-          objectPosition: "top right",
-          zIndex: 0,
-        }}
-        width={100}
-        height={100}
-      />
-      <div className="bottom-0 left-0 w-1/4 h-1/3  pointer-events-none" style={{ zIndex: 0 }}>
-        <img
-          src="/BGG.png"
-          alt="Bottom Left"
-          className="absolute bottom-0 left-0 w-1/4 h-1/2"
+    <Layout
+      style={{ minHeight: "100vh", position: "relative", backgroundColor: "#151345" }}
+    >
+      {/* Centered SignIn Card */}
+      <Content className="flex justify-center items-center w-full h-full z-10 px-4">
+        <Card
           style={{
-            objectFit: "cover",
+            width: 420,
+            borderRadius: 16,
+            boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
+            backgroundColor: "#fff",
           }}
-        />
-      </div>
-
-      <div className="md:h-auto md:w-[420px] relative z-10">
-     
-          <SignInCard  />
-    
-      </div>
-    </div>
+        >
+          <SignInCard />
+        </Card>
+      </Content>
+    </Layout>
   );
 };
