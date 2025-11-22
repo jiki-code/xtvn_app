@@ -7,6 +7,7 @@ body {
     border-color: unset;
     border-right-width: unset;
     border-right-style: none;
+    padding: 0 5px;
 }
 
 /* app-shell.css */
@@ -27,7 +28,7 @@ body {
 }
 
 .menu-light .ant-menu-item-selected {
-  background-color: #3b82f6; /* blue-500 */
+  background-color: #91caff21; 
   color: #fff;
   font-weight: bold;
 }
@@ -55,8 +56,8 @@ body {
 
 .page-content {
   margin-left: 200px;
-  margin-top: 64px;   
-  min-height: calc(100vh - 64px);
+  margin-top: 50px;   
+  min-height: calc(100vh - 54px);
   padding: 24px;
   
   /* Background image */
@@ -64,4 +65,8 @@ body {
   background-size: cover;       
   background-position: center;  
   background-repeat: no-repeat; 
+}
+
+.ant-menu-light.ant-menu-root.ant-menu-vertical {
+    border-inline-end: 0px;
 }

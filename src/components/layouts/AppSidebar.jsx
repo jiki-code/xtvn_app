@@ -58,9 +58,9 @@ export default function AppSidebar({
       width={200}
       style={{
         position: "fixed",
-        top: 64, // below header
+        top: 50, // below header
         left: 0,
-        height: "calc(100vh - 64px)",
+        height: "calc(100vh - 50px)",
         overflow: "auto",
       }}
       className="sidebar"

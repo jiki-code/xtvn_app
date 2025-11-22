@@ -93,13 +93,13 @@ export default function AppShell({ children }) {
               top: 0,
               left: 0,
               width: "100%",
-              height: 64,
+              height: 50,
               zIndex: 1000,
               background: "#151345",
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
-              padding: "0 24px",
+              padding: "0px 24px 0 50px",
               boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
             }}
           >
