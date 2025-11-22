@@ -113,6 +113,11 @@ export function SignInCard() {
               size="large"
               className="w-full"
               loading={loading}
+              style={{
+                backgroundColor: "#151345",
+                borderColor: "#151345",
+                color: "#fff",
+              }}
             >
               Sign in
             </Button>
