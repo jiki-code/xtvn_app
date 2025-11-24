@@ -5,27 +5,38 @@ import {
   Table,
   Card,
   Button,
-  Popconfirm,
-  message,
   Select,
-  Dropdown,
+  Divider,
+  Space,
+  Radio,
 } from "antd";
 import {
   reqGetAllUsers,
   reqCreateUser,
   reqUpdateUser,
-  reqDeleteUser,
   reqResetPassword,
 } from "@/feautures/api/users";
 import { columnsUser } from "./tables/_comlums";
 import UserFormModal from "./components/FormAdd";
 import FormResetPassword from "./components/FormResetPassword";
-import { MoreOutlined, CaretDownOutlined } from "@ant-design/icons";
 import { toast } from "react-toastify";
 import { roleList } from "@/data/common";
 import styles from "./userList.module.css";
 import { cn } from "@/lib/utils";
+import { CustomSwitch } from "@/components/ui/CustomSwitch";
+import { FormSearch } from "./tables/FormSearch";
+import { FilterOutlined } from "@ant-design/icons";
+import { CustomPagination } from "@/components/ui/CustomPagination";
+
+
 const UserList = () => {
+  // --- formSearch ---
+  const initialFilters = {
+    name: "",
+    department: "",
+    role: "",
+    dates: [],
+  };
   const [data, setData] = useState([]);
   const [page, setPage] = useState(1); // current page
   const [pageSize, setPageSize] = useState(10); // page size
@@ -35,7 +46,7 @@ const UserList = () => {
     total: 0,
   });
   const [loading, setLoading] = useState(false);
-
+  const [mode, setMode] = useState("filter");
   // modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isReset, setIsReset] = useState(false);
@@ -43,6 +54,9 @@ const UserList = () => {
 
   const [editingUser, setEditingUser] = useState(null); // null
   const [submitLoading, setSubmitLoading] = useState(false);
+  const [filters, setFilters] = useState(initialFilters);
+
+  const [listDataFilter, setListDataFilter] = useState([]);
 
   const fetchUsers = async (currentPage = 1, currentPageSize = 10) => {
     try {
@@ -62,6 +76,7 @@ const UserList = () => {
         pageSize: pagi.limit || currentPageSize,
         total: pagi.total || users.length || 0,
       });
+      setListDataFilter(users);
     } catch (err) {
       toast.error(err?.message);
     } finally {
@@ -83,20 +98,7 @@ const UserList = () => {
     setEditingUser(null);
     setIsModalOpen(true);
   };
-
-  const handleDelete = async (id) => {
-    try {
-      setLoading(true);
-      await reqDeleteUser(id);
-      message.error("Deleted user");
-      fetchUsers(page, pageSize);
-    } catch (err) {
-      toast.success(err?.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  // submit add
   const handleSubmitUser = async (values) => {
     try {
       setSubmitLoading(true);
@@ -113,7 +115,7 @@ const UserList = () => {
     }
   };
 
-  const handleReset = async (value) => {
+  const handleResetPassword = async (value) => {
     const payload = {
       newPassword: value,
     };
@@ -131,45 +133,68 @@ const UserList = () => {
     }
   };
 
-  const onReset = (id) => {
+  const onResetPassword = (id) => {
     setIsReset(true);
     setIdUser(id);
   };
 
-  const getActionMenu = (record, onDelete) => ({
-    items: [
-      {
-        key: "reset",
-        label: (
-          <span className="text-white cursor-pointer">Reset password</span>
-        ),
-        onClick: () => onReset(record.id),
-      },
-      {
-        key: "delete",
-        danger: true,
-        label: (
-          <Popconfirm
-            title="Are you sure you want to delete this user?"
-            description="This action cannot be undone."
-            okText="Yes"
-            cancelText="No"
-            okButtonProps={{ danger: true }}
-            onConfirm={() => onDelete(record.id)}
-          >
-            <span className="text-white cursor-pointer">Delete</span>
-          </Popconfirm>
-        ),
-      },
-    ],
-  });
+  const handleSearch = (params) => {
+    const { name, department, role, dates } = params || {};
+    const [start, end] = dates || [];
+
+    const filtered = data.filter((item) => {
+      const matchName =
+        !name || item.name.toLowerCase().includes(name.toLowerCase());
+
+      const matchDepartment = !department || item.department === department;
+
+      const matchRole = !role || item.role === role;
+
+      let matchDate = true;
+      if (start && end) {
+        const itemDate = dayjs(item.createdAt); 
+        matchDate =
+          itemDate.isSame(start, "day") ||
+          itemDate.isSame(end, "day") ||
+          (itemDate.isAfter(start, "day") && itemDate.isBefore(end, "day"));
+      }
+
+      return matchName && matchDepartment && matchRole && matchDate;
+    });
+
+    setListDataFilter(filtered);
+  };
+
+  const handleFormChange = (paramsFromForm) => {
+    setFilters(paramsFromForm);
+  };
+
+  const onReset = () => {
+    setFilters(initialFilters);
+    fetchUsers(page, pageSize);
+    setMode("clear");
+  };
+
+  const handleModeChange = (e) => {
+    const value = e.target.value;
+
+    setMode(value);
+
+    if (value === "clear") {
+      onReset();
+    }
+    if (value === "filter") {
+      handleSearch(filters);
+    }
+  };
 
   const columns = [
     ...columnsUser,
     {
-      title: "Role",
+      title: "Position",
       key: "role",
-      width: 160,
+      width: 130,
+      align: "center",
       render: (_, record) => {
         const handleRoleChange = async (newRole) => {
           try {
@@ -192,53 +217,109 @@ const UserList = () => {
       },
     },
     {
+      title: "Status",
+      key: "status",
+      width: 130,
+      align: "center",
+      render: (_, record) => {
+        const onChangeStatus = async (record) => {
+          let newValue = "";
+          if (record.status === "active") {
+            newValue = "off";
+          } else {
+            newValue = "active";
+          }
+          try {
+            await reqUpdateUser(record.id, { status: newValue });
+            toast.success(`User ${record.name} updated to ${newValue}`);
+            fetchUsers(page, pageSize);
+          } catch (err) {
+            toast.error("Failed to update role");
+          }
+        };
+        return (
+          <CustomSwitch
+            value={record.status}
+            onChange={() => onChangeStatus(record)}
+          />
+        );
+      },
+    },
+    {
       title: "Actions",
       key: "actions",
-      width: 90,
+      width: 110,
       align: "center",
       render: (_, record) => (
-        <Dropdown
-          placement="bottom"
-          menu={getActionMenu(record)}
-          trigger={["click"]}
+        <Button
+          onClick={() => onResetPassword(record.id)}
+          className="text-black! bg-white!"
         >
-          <div className="flex items-center justify-center text-gray-400 hover:text-blue-700 ">
-            <Button type="text" shape="circle">
-              <MoreOutlined style={{ fontSize: "22px" }} />
-            </Button>
-            <CaretDownOutlined style={{ fontSize: "10px" }} />
-          </div>
-        </Dropdown>
+          Reset password
+        </Button>
       ),
+    },
+    {
+      title: "View Deail",
+      key: "view",
+      width: 90,
+      align: "center",
+      render: (_, record) => <p>View</p>,
     },
   ];
 
   return (
     <div>
-      <Card
-        className={styles.card}
-        extra={
-          <Button type="primary" onClick={handleAdd}>
-            + Add user
+      <Card className={styles.card}>
+        {/* form search */}
+        <FormSearch onChange={handleFormChange} formSearch={filters} />
+        {/* group button */}
+
+        <div className="flex justify-between px-2">
+          <Button className={styles.createBtn} onClick={handleAdd}>
+            Create New Staff
           </Button>
-        }
-      >
+          <Space>
+            <Radio.Group
+              onChange={handleModeChange}
+              value={mode}
+              style={{ display: "flex" }}
+            >
+              <Radio.Button value="filter" className={styles.baseButtonFilter}>
+                <FilterOutlined className="mr-1" />
+                Filter
+              </Radio.Button>
+
+              <Radio.Button
+                onChange={onReset}
+                className={styles.baseButtonClear}
+                value="clear"
+              >
+                Clear
+              </Radio.Button>
+            </Radio.Group>
+          </Space>
+        </div>
+        <Divider></Divider>
+        {/* table */}
         <Table
           rowKey="id"
           columns={columns}
-          dataSource={Array.isArray(data) ? data : []}
+          dataSource={Array.isArray(listDataFilter) ? listDataFilter : []}
           loading={loading}
-          pagination={{
-            current: pagination.current,
-            pageSize: pagination.pageSize,
-            total: pagination.total,
-            showSizeChanger: true,
-            showTotal: (total) => `Total ${total} users`,
-          }}
-          classNames={styles.style_table}
+          className={styles.customTable}
+          pagination={false}
           onChange={handleTableChange}
         />
+        <CustomPagination
+          pagination={pagination}
+          onChange={(page, pageSize) => {
+            setPagination((prev) => ({ ...prev, current: page, pageSize }));
+            fetchUsers(page, pageSize); // gọi API theo page
+          }}
+        />
 
+        {/* add modal */}
         <UserFormModal
           open={isModalOpen}
           centered
@@ -250,12 +331,13 @@ const UserList = () => {
           onSubmit={handleSubmitUser}
           confirmLoading={submitLoading}
         />
+        {/* reset modal */}
         <FormResetPassword
           open={isReset}
           onCancel={() => {
             setIsReset(false);
           }}
-          onSubmit={handleReset}
+          onSubmit={handleResetPassword}
           confirmLoading={submitLoading}
         />
       </Card>
