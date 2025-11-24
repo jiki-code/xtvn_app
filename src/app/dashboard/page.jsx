@@ -10,22 +10,21 @@ export default function HomePage() {
   const [currentDay, setCurrentDay] = useState(0);
   const [currentTime, setCurrentTime] = useState("");
 
-  const [showPopup, setShowPopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState("");
   const [missedTime, setMissedTime] = useState(0);
   const [startCounting, setStartCounting] = useState(false);
   const [nextPopupTime, setNextPopupTime] = useState(null);
 
-  const [isModalVisible, setIsModalVisible] = useState(false);
   const [isCheckedIn, setIsCheckedIn] = useState(false);
-
-
-  const [isBreakModalVisible, setIsBreakModalVisible] = useState(false);
   const [breakType, setBreakType] = useState(""); 
   const [breakReason, setBreakReason] = useState("");
-  const [isConfirmModalVisible, setIsConfirmModalVisible] = useState(false);
   const [isOnBreak, setIsOnBreak] = useState(false);
   const [breakStartTime, setBreakStartTime] = useState(null);
+
+  const [checkOutHover, setCheckOutHover] = useState(false);
+  const [checkInHover, setCheckInHover] = useState(false);
+  const [breakInHover, setBreakInHover] = useState(false);
+  const [hover, setHover] = useState(false);
 
   // ---- Refs ----
   const popupTimerRef = useRef(null);
@@ -59,11 +58,21 @@ export default function HomePage() {
   };
 
   const ModalOkButton = ({ onOk }) => (
-    <Button type="primary" style={{ marginTop: 16 }} onClick={onOk}>
-      OK
+    <Button
+      style={{
+        marginTop: 16,
+        backgroundColor: hover ? "#0045A6" : "#0162E8",
+        borderColor: hover ? "#0045A6" : "#0162E8",   
+        color: "#FFFFFF",           
+        fontWeight: "bold",
+      }}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      onClick={onOk}
+    >
+      Confirm
     </Button>
   );
-
 
   // Actual check-out logic
   const handleCheckOut = () => {
@@ -250,13 +259,16 @@ export default function HomePage() {
         );  
       case "break":
         return (
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 12, width: "100%" }}>
             <Radio.Group
               onChange={(e) => setBreakType(e.target.value)}
               value={breakType}
               style={{ display: "flex", flexDirection: "column", gap: 12 }}
             >
-              <Radio value="break">Break</Radio>
+              <Radio 
+                value="break"
+                className="custom-radio"
+              >Break</Radio>
               {breakType === "break" && (
                 <Input
                   placeholder="Enter reason"
@@ -265,16 +277,17 @@ export default function HomePage() {
                   style={{ marginTop: 8, width: "100%" }}
                 />
               )}
-              <Radio value="toilet">Toilet</Radio>
+              <Radio value="toilet" className="custom-radio">Toilet</Radio>
             </Radio.Group>
-            <ModalOkButton
-              onOk={() => {
-                if (!breakType) return; // prevent empty selection
-                handleBreakOk();
-              }}
-            />
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+              <ModalOkButton
+                onOk={() => {
+                  if (!breakType) return; 
+                  handleBreakOk();
+                }}
+              />
+            </div>
           </div>
-          
         );
       case "confirmCheckout":
         return (
@@ -427,7 +440,6 @@ export default function HomePage() {
       }, 60000);
 
     }, delay);
-
 
     return () => {
       if (popupTimerRef.current) clearTimeout(popupTimerRef.current);
@@ -588,18 +600,26 @@ export default function HomePage() {
       {/* Buttons */}
       <Button
         style={{
-          background: "linear-gradient(85deg, #3C6CBA, #151345)",
+          background: isCheckedIn
+            ? "linear-gradient(85deg, rgba(60,108,186, 0), rgba(60, 108, 186, 0))"  
+            : checkInHover
+            ? "linear-gradient(85deg, #151345, #151345)" 
+            : "linear-gradient(85deg, #3C6CBA, #151345)",
           border: "1px solid #fff",
-          color: "#FFEA1D",
+          color: isCheckedIn ? "rgba(255, 234, 29, 0.5)" : "#FFEA1D",
           fontWeight: "bold",
           padding: "20px 0",
           fontSize: "1.2rem",
           marginBottom: "15px",
           width: "220px",
           textAlign: "center",
+          cursor: isCheckedIn ? "auto" : "pointer",
         }}
-        onClick={handleCheckIn}
-         disabled={isCheckedIn}
+        onMouseEnter={() => setCheckInHover(true)}
+        onMouseLeave={() => setCheckInHover(false)}
+        onClick={() => {
+          if (!isCheckedIn) handleCheckIn(); 
+        }}
       >
         Check In
       </Button>
@@ -607,18 +627,28 @@ export default function HomePage() {
       <Button
         style={{
           background: isOnBreak
-            ? "linear-gradient(75deg, #EC1C24, #5E0000)" 
+            ? breakInHover
+            ? "linear-gradient(75deg, #5E0000, #5E0000)" 
+            : "linear-gradient(75deg, #EC1C24, #5E0000)"
+            : breakInHover
+            ? "linear-gradient(85deg, #9F8144, #9F8144)" 
             : "linear-gradient(75deg, #EBD97F, #9F8144)", 
           border: "1px solid #fff",
-          color: "#000",
+          color: isOnBreak ? "#FFFFFF" : "#000000",
           fontWeight: "bold",
           padding: "20px 0",
           fontSize: "1.2rem",
           marginBottom: "15px",
           width: "220px",
           textAlign: "center",
+          cursor: !isCheckedIn ? "auto" : "pointer",
         }}
+        onMouseEnter={() => {
+          if (isCheckedIn) setBreakInHover(true); 
+        }}
+        onMouseLeave={() => setBreakInHover(false)}
         onClick={() => {
+          if (!isCheckedIn) return;
           if (isOnBreak) {
             handleBreakOut(); 
           } else {
@@ -629,22 +659,30 @@ export default function HomePage() {
             });
           }
         }}
-        disabled={!isCheckedIn} 
       >
         {isOnBreak ? "Break Out" : "Break In"}
       </Button>
-
+      
       <Button
         style={{
-          background: "linear-gradient(75deg, #E5E5E5, #9E9E9E)",
+          background: checkOutHover
+              ? "linear-gradient(75deg, #9E9E9E, #9E9E9E)" 
+              : "linear-gradient(75deg, #E5E5E5, #9E9E9E)", 
           border: "1px solid #fff",
-          color: "#000",
+          color: !isCheckedIn || isOnBreak ? "rgba(0,0,0,0.7)" : "#000",
           fontWeight: "bold",
           padding: "20px 60px",
           fontSize: "1.2rem",
+          cursor: !isCheckedIn || isOnBreak ? "auto" : "pointer",
         }}
-        onClick={handleCheckOutClick}
-        disabled={!isCheckedIn || isOnBreak}
+        onMouseEnter={() => {
+          if (isCheckedIn && !isOnBreak) setCheckOutHover(true);
+        }}
+        onMouseLeave={() => setCheckOutHover(false)}
+        onClick={() => {
+          if (!isCheckedIn || isOnBreak) return; 
+          handleCheckOutClick();
+        }}
       >
         Check Out
       </Button>

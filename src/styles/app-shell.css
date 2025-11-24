@@ -137,3 +137,17 @@ body {
 .ant-input-outlined:focus-within {
   background-color: #fff;
 }
+
+.custom-radio .ant-radio-inner {
+  border-color: gray;   
+  background-color: #fff;
+}
+
+.custom-radio .ant-radio-checked .ant-radio-inner {
+  background-color: #0162E8; 
+  border-color: #0162E8; 
+}
+
+.custom-radio .ant-radio-checked .ant-radio-inner::after {
+  background-color: #fff;
+}
