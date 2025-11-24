@@ -1,16 +1,357 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect } from "react";
-import { Button, Modal } from "antd";
+import { useState, useEffect, useRef } from "react";
+import { Button, Modal, Radio, Input } from "antd";
 
 export default function HomePage() {
+  // ---- State ----
   const [currentDate, setCurrentDate] = useState("");
   const [currentDay, setCurrentDay] = useState(0);
   const [currentTime, setCurrentTime] = useState("");
 
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState("");
+  const [missedTime, setMissedTime] = useState(0);
+  const [startCounting, setStartCounting] = useState(false);
+  const [nextPopupTime, setNextPopupTime] = useState(null);
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isCheckedIn, setIsCheckedIn] = useState(false);
+
+
+  const [isBreakModalVisible, setIsBreakModalVisible] = useState(false);
+  const [breakType, setBreakType] = useState(""); 
+  const [breakReason, setBreakReason] = useState("");
+  const [isConfirmModalVisible, setIsConfirmModalVisible] = useState(false);
+  const [isOnBreak, setIsOnBreak] = useState(false);
+  const [breakStartTime, setBreakStartTime] = useState(null);
+
+  // ---- Refs ----
+  const popupTimerRef = useRef(null);
+  const missedTimerRef = useRef(null);
+  const popupCountRef = useRef(0);
+
   const day = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
+  // ---- Functions ----
+  const handleCheckIn = () => {
+    showModal({
+      type: "checkin",
+      title: "Check In",
+      //onOk: hideModal,
+      onOk: () => {
+        setIsCheckedIn(true);
+        hideModal();
+        scheduleNextPopup();
+      },
+    });
+  };
+
+  // Open confirm modal
+  const handleCheckOutClick = () => {
+    showModal({
+      type: "confirmCheckout",
+      title: "Checkout",
+      extraData: { icon: "/icon/close.png" },
+      onOk: handleCheckOut 
+    });
+  };
+
+  const ModalOkButton = ({ onOk }) => (
+    <Button type="primary" style={{ marginTop: 16 }} onClick={onOk}>
+      OK
+    </Button>
+  );
+
+
+  // Actual check-out logic
+  const handleCheckOut = () => {
+    // Close modal
+    hideModal();
+
+    // Reset states
+    setIsCheckedIn(false);
+    setShowPopup(false);
+    setMissedTime(0);
+    setStartCounting(false);
+    popupCountRef.current = 0;
+    if (popupTimerRef.current) clearTimeout(popupTimerRef.current);
+    if (missedTimerRef.current) clearInterval(missedTimerRef.current);
+
+    // Show a success modal
+    showModal({
+      type: "checkoutSuccess",
+      title: "Success",
+      onOk: hideModal
+    });
+  };
+
+  const handleBreakOk = () => {
+    if (!breakType) return; 
+    const now = new Date();
+    setBreakStartTime(now);
+
+    hideModal();
+    // Show success modal
+    showModal({
+      type: "breakSuccess",
+      title: "Break Started",
+      onOk: () => {
+        setIsOnBreak(true);
+        hideModal();
+        setBreakType(""); 
+        setBreakReason("");
+      },
+      extraData: { startTime: now }
+    });
+  };
+
+  const handleBreakOut = () => {
+    const now = new Date();
+    // Show break end success modal
+    showModal({
+      type: "breakEndSuccess",
+      title: "Break Ended",
+      onOk: () => {
+        setIsOnBreak(false);
+        hideModal();
+      },
+      extraData: { 
+        endTime: now,
+        breakType, 
+      }
+    });
+  };
+
+  const handleOk = () => setIsModalVisible(false);
+
+  const [modalConfig, setModalConfig] = useState({
+    visible: false,
+    type: "",
+    title: "",
+    content: null,
+    onOk: null,
+    extraData: null,
+  });
+
+  const showModal = ({ type, title, onOk, extraData }) => {
+    setModalConfig({
+      visible: true,
+      type,
+      title,
+      onOk,
+      extraData: extraData || null,
+    });
+  };
+
+  const hideModal = () => {
+    setModalConfig((prev) => ({ ...prev, visible: false }));
+    setBreakType(""); 
+    setBreakReason("");
+  };
+
+  const generateRandomPopup = () => {
+    const now = new Date();
+    /*const startDate = new Date();
+    startDate.setHours(9, 0, 0, 0);
+    const endDate = new Date();
+    endDate.setHours(19, 0, 0, 0); 
+
+    const effectiveStart = now > startDate ? now : startDate;
+    if (effectiveStart >= endDate) return null;
+
+    return new Date(
+      effectiveStart.getTime() + Math.random() * (endDate.getTime() - effectiveStart.getTime())
+    );*/
+
+    return new Date(now.getTime() + Math.random() * 60_000 + 30_000); 
+  };
+
+  const scheduleNextPopup = () => {
+    if (!isCheckedIn || popupCountRef.current >= 2) return;
+
+    const next = generateRandomPopup();
+    if (next) {
+      setNextPopupTime(next);
+      console.log("Next popup scheduled at:", next.toLocaleTimeString());
+    }
+  };
+
+  const handlePopupClick = () => {
+    setShowPopup(false);
+
+    if (missedTimerRef.current) clearInterval(missedTimerRef.current);
+
+    // Show a popup instead of alert
+    if (startCounting) {
+      showModal({
+        type: "popup",
+        title: "Missed Time",
+        extraData: { message: `You missed ${missedTime} seconds!` },
+        onOk: () => {
+          hideModal();
+          setMissedTime(0);
+          setStartCounting(false);
+          if (popupCountRef.current < 2) scheduleNextPopup();
+        }
+      });
+    } else {
+      showModal({
+        type: "popup",
+        title: "On Time",
+        extraData: { message: "Checked in on time!" },
+        onOk: () => {
+          hideModal(); 
+          if (popupCountRef.current < 2) scheduleNextPopup();
+        }
+      });
+    }
+
+    setMissedTime(0);
+    setStartCounting(false);
+
+    if (popupCountRef.current < 2) scheduleNextPopup();
+  };
+
+  // const handleBreakOk = () => {
+  //   console.log("Selected:", breakType, "Reason:", breakReason);
+  //   setIsBreakModalVisible(false);
+  //   setBreakType("");
+  //   setBreakReason("");
+  // };
+
+  const handleBreakCancel = () => {
+    //setIsBreakModalVisible(false);
+    setBreakType("");
+    setBreakReason("");
+  };
+
+  // ---- Render Modal Content Dynamically ----
+  const renderModalContent = () => {
+    switch (modalConfig.type) {
+      case "checkin":
+        return (
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, color: "#000" }}>
+            <Image src="/icon/v-icon.png" alt="Success" width={90} height={90} style={{ marginBottom: 10 }} />
+            <h2 style={{ margin: 0, fontSize: "1.8rem", fontWeight: "bold" }}>Success!</h2>
+            <p>You have successfully checked in.</p>
+            <ModalOkButton onOk={modalConfig.onOk} />
+          </div>
+        );
+      case "checkoutSuccess":
+        return (
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, color: "#000" }}>
+            <Image src="/icon/v-icon.png" alt="Success" width={90} height={90} style={{ marginBottom: 10 }} />
+            <h2 style={{ margin: 0, fontSize: "1.8rem", fontWeight: "bold" }}>Success!</h2>
+            <p>You have successfully checked out.</p>
+            <ModalOkButton onOk={modalConfig.onOk} />
+          </div>
+        );  
+      case "break":
+        return (
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            <Radio.Group
+              onChange={(e) => setBreakType(e.target.value)}
+              value={breakType}
+              style={{ display: "flex", flexDirection: "column", gap: 12 }}
+            >
+              <Radio value="break">Break</Radio>
+              {breakType === "break" && (
+                <Input
+                  placeholder="Enter reason"
+                  value={breakReason}
+                  onChange={(e) => setBreakReason(e.target.value)}
+                  style={{ marginTop: 8, width: "100%" }}
+                />
+              )}
+              <Radio value="toilet">Toilet</Radio>
+            </Radio.Group>
+            <ModalOkButton
+              onOk={() => {
+                if (!breakType) return; // prevent empty selection
+                handleBreakOk();
+              }}
+            />
+          </div>
+          
+        );
+      case "confirmCheckout":
+        return (
+          <div 
+            style={{ 
+              display: "flex", 
+              flexDirection: "column", 
+              alignItems: "center", 
+              gap: 20, 
+              textAlign: "center", 
+              color: "#000" 
+            }}
+          >
+            {/* Icon */}
+            {modalConfig.extraData?.icon && (
+              <Image 
+                src={modalConfig.extraData.icon} 
+                alt="Icon" 
+                width={65}   
+                height={65} 
+              />
+            )}
+
+            {/* Message with multiple lines */}
+            <div style={{ 
+              fontWeight: "bold", 
+              textAlign: "center", 
+              fontSize: "2rem", 
+            }}>
+              Confirm
+            </div>
+
+            <div style={{ fontSize: "1rem", fontWeight: "bold", margin: 0 }}>
+              Are you sure you want to check-out?
+            </div>
+            <ModalOkButton onOk={modalConfig.onOk} />
+          </div>
+        );
+
+      case "popup":
+        return (
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
+            <h3 style={{ color: "red" }}>{modalConfig.extraData?.message || popupMessage}</h3>
+            {startCounting && <p style={{ color: "#000" }}>Missed time: {missedTime}s</p>}
+            <ModalOkButton onOk={modalConfig.onOk} />
+          </div>
+        );
+
+      case "breakSuccess":
+        return (
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, color: "#000" }}>
+            <Image src="/icon/v-icon.png" alt="Success" width={90} height={90} style={{ marginBottom: 10 }} />
+            <h2 style={{ margin: 0, fontSize: "1.8rem", fontWeight: "bold" }}>Success!</h2>
+            <p>Your break start time has been saved: {modalConfig.extraData?.startTime.toLocaleTimeString()}</p>
+            <ModalOkButton onOk={modalConfig.onOk} />
+          </div>
+        );
+
+      case "breakEndSuccess":
+        return (
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, color: "#000" }}>
+            <Image src="/icon/v-icon.png" alt="Success" width={90} height={90} style={{ marginBottom: 10 }} />
+            <h2 style={{ margin: 0, fontSize: "1.8rem", fontWeight: "bold" }}>Success!</h2>
+            <p>
+              You have successfully ended your {modalConfig.extraData?.breakType || "break"} at:{" "}
+              {modalConfig.extraData?.endTime.toLocaleTimeString()}
+            </p>
+            <ModalOkButton onOk={modalConfig.onOk} />
+          </div>
+        );
+  
+      default:
+        return null;
+    }
+  };
+
+  // Clock and Date update
   useEffect(() => {
     const date = new Date();
     setCurrentDay(date.getDay());
@@ -25,17 +366,87 @@ export default function HomePage() {
 
     const interval = setInterval(() => {
       const now = new Date();
-      setCurrentTime(now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" }));
+      setCurrentTime(
+        now.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        })
+      );
     }, 1000);
 
     return () => clearInterval(interval);
   }, []);
 
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  // Trigger popup at scheduled time
+  useEffect(() => {
+    if (!nextPopupTime || popupCountRef.current >= 2 || !isCheckedIn) return;
 
-  const handleCheckIn = () => setIsModalVisible(true);
-  const handleOk = () => setIsModalVisible(false);
+    const now = new Date();
+    const delay = Math.max(nextPopupTime.getTime() - now.getTime(), 0);
 
+    if (popupTimerRef.current) clearTimeout(popupTimerRef.current);
+
+    /*popupTimerRef.current = setTimeout(() => {
+      setPopupMessage(`Random popup at ${new Date().toLocaleTimeString()}`);
+      setShowPopup(true);
+      popupCountRef.current += 1;
+
+      // Start counting missed time after 60s
+      setTimeout(() => {
+        setStartCounting(true);
+        missedTimerRef.current = setInterval(() => {
+          setMissedTime((prev) => prev + 1);
+        }, 1000);
+      }, 60000);
+    }, delay);*/
+
+    popupTimerRef.current = setTimeout(() => {
+      popupCountRef.current += 1;
+
+      const message = `Random popup at ${new Date().toLocaleTimeString()}`;
+
+      showModal({
+        type: "popup",
+        title: "Reminder",
+        extraData: { message },
+        onOk: () => {
+          hideModal();
+          setMissedTime(0);
+          setStartCounting(false);
+          if (popupCountRef.current < 2) scheduleNextPopup();
+        },
+      });
+
+      // Start counting missed time after 60s
+      setTimeout(() => {
+        setStartCounting(true);
+        missedTimerRef.current = setInterval(() => {
+          setMissedTime((prev) => prev + 1);
+        }, 1000);
+      }, 60000);
+
+    }, delay);
+
+
+    return () => {
+      if (popupTimerRef.current) clearTimeout(popupTimerRef.current);
+    };
+  }, [nextPopupTime, isCheckedIn]);
+
+  // Schedule first popup on mount
+  // useEffect(() => {
+  //   scheduleNextPopup();
+  // }, []);
+
+  useEffect(() => {
+    if (isCheckedIn) {
+      scheduleNextPopup();
+    }
+  }, [isCheckedIn]);
+
+
+  // ---- Render ----
   return (
     <div
       style={{
@@ -45,16 +456,16 @@ export default function HomePage() {
         alignItems: "center",
       }}
     >
-      {/* CENTER LOGO */}
+      {/* Logo */}
       <Image
         src="/icon/X Team - logo.png"
         alt="Logo"
         width={100}
         height={100}
-        style={{ marginBottom: 25, marginTop: 20 }}
+        style={{ marginBottom: 35, marginTop: 35 }}
       />
 
-      {/* DATE BOX */}
+      {/* Date Box */}
       <div
         style={{
           width: "90%",
@@ -62,7 +473,7 @@ export default function HomePage() {
           position: "relative",
           borderRadius: "16px",
           overflow: "hidden",
-          marginBottom: 15
+          marginBottom: 15,
         }}
       >
         <Image
@@ -70,14 +481,8 @@ export default function HomePage() {
           alt="Date Background"
           width={450}
           height={150}
-          style={{
-            width: "100%",
-            height: "auto",
-            display: "block",
-          }}
+          style={{ width: "100%", height: "auto", display: "block" }}
         />
-
-        {/* Centered Date Text */}
         <div
           style={{
             position: "absolute",
@@ -94,21 +499,21 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* TIME BOX */}
+      {/* Time Box */}
       <div
         style={{
           width: "90%",
           maxWidth: "450px",
-          aspectRatio: "2 / 1", 
+          aspectRatio: "2 / 1",
           position: "relative",
           borderRadius: "16px",
           overflow: "hidden",
           backgroundImage: "url('/icon/bg-clock.png')",
-          backgroundSize: "contain",        
+          backgroundSize: "contain",
           backgroundRepeat: "no-repeat",
           display: "flex",
-          flexDirection: "column",     
-          alignItems: "center",        
+          flexDirection: "column",
+          alignItems: "center",
           padding: "40px",
           color: "white",
           textAlign: "center",
@@ -121,16 +526,16 @@ export default function HomePage() {
             display: "flex",
             justifyContent: "space-between",
             width: "100%",
-            padding: "0 45px 0 45px",
+            padding: "0 45px",
           }}
         >
-          {["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"].map((d, i) => (
+          {day.map((d, i) => (
             <span
               key={i}
               style={{
                 fontSize: 16,
-                color: i === currentDay ? "#000" : "#000",
                 fontWeight: i === currentDay ? "bold" : "normal",
+                color: "#000",
               }}
             >
               {d}
@@ -143,7 +548,7 @@ export default function HomePage() {
           style={{
             display: "flex",
             justifyContent: "center",
-            alignItems: "flex-end", 
+            alignItems: "flex-end",
             fontSize: "4.3rem",
             fontFamily: "'Roboto Mono', monospace",
             fontWeight: "bold",
@@ -162,7 +567,8 @@ export default function HomePage() {
             {currentTime.split(" ")[1]}
           </span>
         </div>
-        {/* Vietnam UTC with small logo */}
+
+        {/* Timezone */}
         <div
           style={{
             display: "flex",
@@ -178,89 +584,92 @@ export default function HomePage() {
           <span>(UTC+07:00) Asia/VietNam </span>
         </div>
       </div>
+
+      {/* Buttons */}
       <Button
         style={{
           background: "linear-gradient(85deg, #3C6CBA, #151345)",
-          border: "1px solid #fff", 
+          border: "1px solid #fff",
           color: "#FFEA1D",
           fontWeight: "bold",
           padding: "20px 0",
           fontSize: "1.2rem",
           marginBottom: "15px",
           width: "220px",
-          textAlign: "center", 
+          textAlign: "center",
         }}
         onClick={handleCheckIn}
+         disabled={isCheckedIn}
       >
         Check In
       </Button>
-    
-      <Modal
-        open={isModalVisible}
-        onCancel={handleOk}
-        footer={null} 
-        modalRender={(modal) => (
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center", 
-              justifyContent: "center", 
-              background: "linear-gradient(120deg, #fff, #fff)",
-              padding: 20,
-              borderRadius: 16,
-              textAlign: "center",
-              color: "#000",
-            }}
-          >
-            <Image
-              src="/icon/v-icon.png"
-              alt="Success"
-              width={90}
-              height={90}
-              style={{ marginBottom: 10 }} 
-            />
-            <h2 style={{ margin: "0 0 8px 0", fontSize: "1.8rem", fontWeight: "bold" }}>Success!</h2>
-            <p style={{ margin: 0 }}>You have successfully checked in.</p>
-            <Button
-              onClick={handleOk}
-              style={{ marginTop: 16, width: 100 }}
-            >
-              Confirm
-            </Button>
-          </div>
-        )}
-      />
 
       <Button
         style={{
-          background: "linear-gradient(75deg, #EBD97F, #9F8144)",
-          border: "1px solid #fff", 
+          background: isOnBreak
+            ? "linear-gradient(75deg, #EC1C24, #5E0000)" 
+            : "linear-gradient(75deg, #EBD97F, #9F8144)", 
+          border: "1px solid #fff",
           color: "#000",
           fontWeight: "bold",
           padding: "20px 0",
           fontSize: "1.2rem",
           marginBottom: "15px",
           width: "220px",
-          textAlign: "center", 
+          textAlign: "center",
         }}
+        onClick={() => {
+          if (isOnBreak) {
+            handleBreakOut(); 
+          } else {
+            showModal({
+              type: "break",
+              title: "Break In Detail",
+              onOk: handleBreakOk,
+            });
+          }
+        }}
+        disabled={!isCheckedIn} 
       >
-        Break In
+        {isOnBreak ? "Break Out" : "Break In"}
       </Button>
+
       <Button
         style={{
           background: "linear-gradient(75deg, #E5E5E5, #9E9E9E)",
-          border: "1px solid #fff", 
+          border: "1px solid #fff",
           color: "#000",
           fontWeight: "bold",
           padding: "20px 60px",
           fontSize: "1.2rem",
         }}
+        onClick={handleCheckOutClick}
+        disabled={!isCheckedIn || isOnBreak}
       >
         Check Out
       </Button>
-      
+
+      <Modal
+        open={modalConfig.visible}
+        title={modalConfig.title}
+        onCancel={hideModal}
+        centered
+        // footer={
+        //   modalConfig.type === "break" ? (
+        //     <Button type="primary" onClick={handleBreakOk} disabled={!breakType}>
+        //       OK
+        //     </Button>
+        //   ) : modalConfig.onOk ? (
+        //     undefined 
+        //   ) : null
+        // }
+        // onOk={() => {
+        //   if (modalConfig.onOk) modalConfig.onOk();
+        // }}
+        footer={null}
+      >
+        {renderModalContent()}
+      </Modal>
     </div>
   );
 }
-
