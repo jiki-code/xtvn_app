@@ -40,10 +40,10 @@ const UserFormModal = ({
   return (
     <Modal
       open={open}
-      title={initialValues ? "Update user" : "Add new user"}
+      title="Add new user"
       onCancel={onCancel}
       onOk={handleOk}
-      okText={initialValues ? "Update" : "Create"}
+      okText="Create"
       confirmLoading={confirmLoading}
     >
       <Form layout="vertical" form={form}>
@@ -66,7 +66,7 @@ const UserFormModal = ({
           <Input placeholder="Enter email" />
         </Form.Item>
         <Form.Item name="password" label="Password">
-          <Input placeholder="Enter role" />
+          <Input placeholder="Enter password" />
         </Form.Item>
 
         <Form.Item name="role" label="Role">
