@@ -5,7 +5,6 @@ import {
   Table,
   Card,
   Button,
-  Space,
   Popconfirm,
   message,
   Select,
@@ -21,7 +20,7 @@ import {
 import { columnsUser } from "./tables/_comlums";
 import UserFormModal from "./components/FormAdd";
 import FormResetPassword from "./components/FormResetPassword";
-import { MoreOutlined } from "@ant-design/icons";
+import { MoreOutlined, CaretDownOutlined } from "@ant-design/icons";
 import { toast } from "react-toastify";
 import { roleList } from "@/data/common";
 import styles from "./userList.module.css";
@@ -141,7 +140,9 @@ const UserList = () => {
     items: [
       {
         key: "reset",
-        label: "Reset Password",
+        label: (
+          <span className="text-white cursor-pointer">Reset password</span>
+        ),
         onClick: () => onReset(record.id),
       },
       {
@@ -156,7 +157,7 @@ const UserList = () => {
             okButtonProps={{ danger: true }}
             onConfirm={() => onDelete(record.id)}
           >
-            <span className="text-red-500 cursor-pointer">Delete</span>
+            <span className="text-white cursor-pointer">Delete</span>
           </Popconfirm>
         ),
       },
@@ -190,17 +191,23 @@ const UserList = () => {
         );
       },
     },
-   
     {
       title: "Actions",
       key: "actions",
       width: 90,
       align: "center",
       render: (_, record) => (
-        <Dropdown menu={getActionMenu(record)} trigger={["click"]}>
-          <Button styles={`color: #333`} type="text" shape="circle">
-            <MoreOutlined />
-          </Button>
+        <Dropdown
+          placement="bottom"
+          menu={getActionMenu(record)}
+          trigger={["click"]}
+        >
+          <div className="flex items-center justify-center text-gray-400 hover:text-blue-700 ">
+            <Button type="text" shape="circle">
+              <MoreOutlined style={{ fontSize: "22px" }} />
+            </Button>
+            <CaretDownOutlined style={{ fontSize: "10px" }} />
+          </div>
         </Dropdown>
       ),
     },
