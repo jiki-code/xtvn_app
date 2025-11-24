@@ -1,7 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Table, Card, Button, Space, Popconfirm, message, Select } from "antd";
+import {
+  Table,
+  Card,
+  Button,
+  Popconfirm,
+  message,
+  Select,
+  Dropdown,
+} from "antd";
 import {
   reqGetAllUsers,
   reqCreateUser,
@@ -12,7 +20,7 @@ import {
 import { columnsUser } from "./tables/_comlums";
 import UserFormModal from "./components/FormAdd";
 import FormResetPassword from "./components/FormResetPassword";
-
+import { MoreOutlined, CaretDownOutlined } from "@ant-design/icons";
 import { toast } from "react-toastify";
 import { roleList } from "@/data/common";
 import styles from "./userList.module.css";
@@ -128,6 +136,34 @@ const UserList = () => {
     setIdUser(id);
   };
 
+  const getActionMenu = (record, onDelete) => ({
+    items: [
+      {
+        key: "reset",
+        label: (
+          <span className="text-white cursor-pointer">Reset password</span>
+        ),
+        onClick: () => onReset(record.id),
+      },
+      {
+        key: "delete",
+        danger: true,
+        label: (
+          <Popconfirm
+            title="Are you sure you want to delete this user?"
+            description="This action cannot be undone."
+            okText="Yes"
+            cancelText="No"
+            okButtonProps={{ danger: true }}
+            onConfirm={() => onDelete(record.id)}
+          >
+            <span className="text-white cursor-pointer">Delete</span>
+          </Popconfirm>
+        ),
+      },
+    ],
+  });
+
   const columns = [
     ...columnsUser,
     {
@@ -158,27 +194,21 @@ const UserList = () => {
     {
       title: "Actions",
       key: "actions",
-      width: 160,
+      width: 90,
+      align: "center",
       render: (_, record) => (
-        <Space>
-          <Button
-            onClick={() => onReset(record.id)}
-            color="default"
-            variant="solid"
-          >
-            Reset password
-          </Button>
-          <Popconfirm
-            title="Are you sure you want to delete this user?"
-            okText="Yes"
-            cancelText="No"
-            onConfirm={() => handleDelete(record.id)}
-          >
-            <Button color="danger" variant="solid">
-              Delete
+        <Dropdown
+          placement="bottom"
+          menu={getActionMenu(record)}
+          trigger={["click"]}
+        >
+          <div className="flex items-center justify-center text-gray-400 hover:text-blue-700 ">
+            <Button type="text" shape="circle">
+              <MoreOutlined style={{ fontSize: "22px" }} />
             </Button>
-          </Popconfirm>
-        </Space>
+            <CaretDownOutlined style={{ fontSize: "10px" }} />
+          </div>
+        </Dropdown>
       ),
     },
   ];

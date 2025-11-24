@@ -3,6 +3,8 @@
   border-radius: 10px;
   border: none;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  max-height: 645px;
+  height: 630px;
 }
 
 .style_table {
@@ -43,6 +45,8 @@
 }
 :global(.ant-modal .ant-modal-title) {
   color: #333 !important;
+  font-size: 20px;
+  font-weight: 600;
 }
 
 :global(.ant-input-outlined:focus),
@@ -79,4 +83,12 @@
 :global(.ant-table-wrapper .ant-table-tbody > tr > td) {
   background-color: #fff;
   color: #151345;
+}
+
+:global(.ant-btn-variant-text) {
+  color: #99a1af !important;
+  background-color: #fff;
+  border: none;
+  font-size: 18px !important;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.02);
 }
