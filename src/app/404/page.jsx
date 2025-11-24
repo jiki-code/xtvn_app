@@ -11,7 +11,7 @@ function NotFound() {
       <p className="text-2xl font-bold">Not Data</p>
       <a
         href="/"
-        className="inline-block px-6 py-3 font-medium text-white rounded-xl transition shadow-md bg-primary hover:bg-primary-dark"
+        className="inline-block px-6 py-3 font-medium text-white rounded-xl transition shadow-md bg-blue-500 hover:bg-primary-dark"
       >
         Back HomePage
       </a>

@@ -36,7 +36,6 @@ export default function AppShell({ children }) {
   const [collapsed, setCollapsed] = useState(false);
   const isDesktop = useIsDesktop();
 
-  // Load từ localStorage lúc đầu
   useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -47,7 +46,6 @@ export default function AppShell({ children }) {
     if (savedCollapsed === "true") setCollapsed(true);
   }, []);
 
-  // Lưu + set class dark cho html
   useEffect(() => {
     if (typeof window === "undefined") return;
 

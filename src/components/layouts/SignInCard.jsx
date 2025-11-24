@@ -59,7 +59,7 @@ export function SignInCard() {
     <div className="flex items-center justify-center bg-slate-100 rounded-xl">
       <Card className="w-full max-w-md shadow-lg border border-slate-200">
         <div className="mb-4 text-center">
-          <Title level={3} className="!mb-1">
+          <Title level={3} className="mb-1!">
             Sign in to XTVN
           </Title>
           <Text type="secondary">
