@@ -2,7 +2,8 @@
 
 import { useEffect } from "react";
 import { Modal, Form, Input, Select } from "antd";
-import { roleList } from "@/data/common";
+import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
+import { roleList, departmanList } from "@/data/common";
 const UserFormModal = ({
   open,
   initialValues,
@@ -22,6 +23,8 @@ const UserFormModal = ({
           role: initialValues.role,
           password: initialValues.password,
           username: initialValues.username,
+          department: initialValues.department,
+          user_id: initialValues.user_id
         });
       }
     }
@@ -40,7 +43,7 @@ const UserFormModal = ({
   return (
     <Modal
       open={open}
-      title="Add new user"
+      title="Create New Staff"
       onCancel={onCancel}
       onOk={handleOk}
       okText="Create"
@@ -65,11 +68,26 @@ const UserFormModal = ({
         >
           <Input placeholder="Enter email" />
         </Form.Item>
-        <Form.Item name="password" label="Password">
-          <Input placeholder="Enter password" />
+        <Form.Item name="user_id" label="Employee ID">
+          <Input placeholder="Enter Employee ID" />
         </Form.Item>
-
-        <Form.Item name="role" label="Role">
+        <Form.Item name="password" label="Password">
+          <Input.Password
+            placeholder="Enter password"
+            iconRender={(visible) =>
+              visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+            }
+          />
+        </Form.Item>
+        <Form.Item name="department" label="Department">
+          <Select
+            placeholder="Select Department"
+            className="w-full"
+            onChange={(value) => console.log("Selected:", value)}
+            options={departmanList}
+          ></Select>
+        </Form.Item>
+        <Form.Item name="role" label="Position">
           <Select
             placeholder="Select Role"
             className="w-full"

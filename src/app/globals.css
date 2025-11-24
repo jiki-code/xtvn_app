@@ -48,6 +48,8 @@ body {
 
 .ant-table-wrapper .ant-table-thead > tr > th::before {
   background-color: #e5e7eb;
+  position: sticky;
+  z-index: 10;
 }
 
 .ant-input-outlined {
@@ -101,14 +103,47 @@ body {
 
 .ant-input-outlined {
   border: 1px solid #c7c7c7;
-  max-height: 33px;
-
+  max-height: 34px;
 }
 /* border-select */
 .ant-select-selector {
   border: 1px solid #c7c7c7 !important;
-  max-height: 33px;
+  max-height: 34px;
+}
 
+/* date-picker */
+.ant-picker {
+  border-radius: 8px !important;
+  border: 1px solid #c7c7c7 !important;
+  max-height: 34px;
+  background-color: #fff !important;
+}
+
+.ant-picker-input > input {
+  color: #1e293b !important; /* slate-800 */
+}
+
+.ant-picker-panel-layout {
+  @apply bg-neutral-100 text-black;
+}
+
+.ant-picker-panels {
+  @apply text-black;
+}
+
+.ant-picker-dropdown .ant-picker-header {
+  @apply text-blue-500/95 text-xl;
+}
+
+.ant-picker-dropdown .ant-picker-content th {
+  color: #333 !important;
+  font-weight: 600;
+}
+.ant-picker-dropdown .ant-picker-content td {
+  color: #272731 !important;
+}
+.ant-form-item {
+  margin-bottom: 10px !important;
 }
 
 /* ===========================
@@ -251,4 +286,88 @@ body {
 
 .button-danger-second:hover {
   background: var(--danger-red-second-hover);
+}
+
+.custom-pagination {
+  display: flex;
+  justify-content: flex-end;
+  padding: 8px 16px;
+}
+
+/* số trang bình thường */
+.custom-pagination .ant-pagination-item {
+  border-radius: 10px;
+  background: #f1f5f9;
+  border: none;
+}
+
+/* số trang đang active */
+.custom-pagination .ant-pagination-item-active {
+  background: #2563eb;
+  border-color: #2563eb;
+}
+
+.custom-pagination .ant-pagination-item a {
+  color: #0f172a;
+}
+
+.custom-pagination .ant-pagination-item-active a {
+  color: #ffffff;
+}
+
+/* nút Quay lại / Tiếp */
+.custom-pagination .ant-pagination-prev .ant-pagination-item-link,
+.custom-pagination .ant-pagination-next .ant-pagination-item-link {
+  border-radius: 10px;
+  background: #1677ff;
+  border: none;
+  color: #0f172a;
+}
+
+.custom-pagination .ant-pagination-item:hover,
+.custom-pagination .ant-pagination-prev .ant-pagination-item-link:hover,
+.custom-pagination .ant-pagination-next .ant-pagination-item-link:hover {
+  background: #1677ff;
+}
+
+.ant-pagination-total-text {
+  color: #0f172a;
+  font-size: 16px;
+}
+
+.ant-pagination .ant-pagination-next button {
+  background-color: #e8ecf5;
+  padding: 1px 12px;
+  color: #000000;
+  cursor: pointer;
+  user-select: none;
+  border-radius: 10px;
+}
+.ant-pagination .ant-pagination-prev button {
+  background-color: #e8ecf5;
+  color: #000000;
+  cursor: pointer;
+  user-select: none;
+  padding: 1px 12px;
+  border-radius: 10px;
+}
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #e4e6ef;
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #737f9e;
+  border-radius: 20px;
+  transition: background 0.3s ease;
+}
+
+/* Khi hover vào thumb */
+::-webkit-scrollbar-thumb:hover {
+  background: #5a6485;
 }

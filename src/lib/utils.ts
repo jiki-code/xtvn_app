@@ -30,8 +30,9 @@ export function formatDateTimeStamp(timestamp: number, hasTime: boolean) {
   if (hasTime) {
     const hours = String(date.getHours()).padStart(2, "0");
     const minutes = String(date.getMinutes()).padStart(2, "0");
+    const sed = String(date.getSeconds()).padStart(2, "0");
 
-    return `${day}/${month}/${year} ${hours}:${minutes}`;
+    return `${day}/${month}/${year} ${hours}:${minutes}:${sed}`;
   } else {
     return `${day}/${month}/${year}`;
   }
