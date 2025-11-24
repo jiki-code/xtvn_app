@@ -57,7 +57,7 @@ const FormSearch = ({ onChange, formSearch }) => {
           <Select
             placeholder="Search by Department"
             className="w-full"
-            value={form.department}
+            value={form?.department}
             onChange={handleSelectChange("department")}
             options={departmanList}
           />
@@ -66,7 +66,7 @@ const FormSearch = ({ onChange, formSearch }) => {
         <div className="w-full">
           <Input
             placeholder="Search by Name"
-            value={form.name}
+            value={form?.name}
             name="name"
             allowClear
             onChange={handleInputChange}
@@ -76,9 +76,9 @@ const FormSearch = ({ onChange, formSearch }) => {
 
         <div className="w-full">
           <Select
-           placeholder="Search by Position"
+            placeholder="Search by Position"
             className="w-full"
-            value={form.role}
+            value={form?.role}
             onChange={handleSelectChange("role")}
             options={roleList}
           />

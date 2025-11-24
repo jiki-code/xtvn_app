@@ -1,17 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { Table, Card, Button, Select, Divider, Spin } from "antd";
 import {
-  Table,
-  Card,
-  Button,
-  Select,
-  Divider,
-  Space,
-  Radio,
-} from "antd";
-import {
-  reqGetAllUsers,
   reqCreateUser,
   reqUpdateUser,
   reqResetPassword,
@@ -20,15 +11,14 @@ import { columnsUser } from "./tables/_comlums";
 import UserFormModal from "./components/FormAdd";
 import FormResetPassword from "./components/FormResetPassword";
 import { toast } from "react-toastify";
-import { roleList } from "@/data/common";
-import styles from "./userList.module.css";
+import { roleList, pageSizeList } from "@/data/common";
+import styles from "./style/userList.module.css";
 import { cn } from "@/lib/utils";
 import { CustomSwitch } from "@/components/ui/CustomSwitch";
 import { FormSearch } from "./tables/FormSearch";
-import { FilterOutlined } from "@ant-design/icons";
 import { CustomPagination } from "@/components/ui/CustomPagination";
-
-
+import { Toolbar } from "./components/ToolBar";
+import { getDataUser } from "./tables/getDataUser";
 const UserList = () => {
   // --- formSearch ---
   const initialFilters = {
@@ -37,15 +27,9 @@ const UserList = () => {
     role: "",
     dates: [],
   };
-  const [data, setData] = useState([]);
   const [page, setPage] = useState(1); // current page
   const [pageSize, setPageSize] = useState(10); // page size
-  const [pagination, setPagination] = useState({
-    current: 1,
-    pageSize: 10,
-    total: 0,
-  });
-  const [loading, setLoading] = useState(false);
+
   const [mode, setMode] = useState("filter");
   // modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -54,40 +38,18 @@ const UserList = () => {
 
   const [editingUser, setEditingUser] = useState(null); // null
   const [submitLoading, setSubmitLoading] = useState(false);
-  const [filters, setFilters] = useState(initialFilters);
 
-  const [listDataFilter, setListDataFilter] = useState([]);
-
-  const fetchUsers = async (currentPage = 1, currentPageSize = 10) => {
-    try {
-      setLoading(true);
-      const queryParams = {
-        page: currentPage,
-        limit: currentPageSize,
-      };
-      const res = await reqGetAllUsers(queryParams);
-      const dataRes = res.data || res;
-      const users = dataRes.users || dataRes.data?.users || [];
-      const pagi = dataRes.pagination || dataRes.data?.pagination || {};
-
-      setData(Array.isArray(users) ? users : []);
-      setPagination({
-        current: pagi.currentPage || currentPage,
-        pageSize: pagi.limit || currentPageSize,
-        total: pagi.total || users.length || 0,
-      });
-      setListDataFilter(users);
-    } catch (err) {
-      toast.error(err?.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchUsers(page, pageSize);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, pageSize]);
+  const {
+    listDataFilter,
+    setListDataFilter,
+    pagination,
+    setPagination,
+    fetchUsers,
+    filters,
+    setFilters,
+    loading,
+    data,
+  } = getDataUser(initialFilters);
 
   const handleTableChange = (pag) => {
     setPage(pag.current);
@@ -138,6 +100,11 @@ const UserList = () => {
     setIdUser(id);
   };
 
+  const handleClear = () => {
+    setFilters(initialFilters);
+    fetchUsers(pagination.current, pagination.pageSize);
+  };
+
   const handleSearch = (params) => {
     const { name, department, role, dates } = params || {};
     const [start, end] = dates || [];
@@ -146,13 +113,13 @@ const UserList = () => {
       const matchName =
         !name || item.name.toLowerCase().includes(name.toLowerCase());
 
-      const matchDepartment = !department || item.department === department;
+      const matchDepartment = !department || item.department.toLowerCase() === department.toLowerCase();
 
-      const matchRole = !role || item.role === role;
+      const matchRole = !role || item.role.toLowerCase() === role.toLowerCase();
 
       let matchDate = true;
       if (start && end) {
-        const itemDate = dayjs(item.createdAt); 
+        const itemDate = dayjs(item.createdAt);
         matchDate =
           itemDate.isSame(start, "day") ||
           itemDate.isSame(end, "day") ||
@@ -167,25 +134,6 @@ const UserList = () => {
 
   const handleFormChange = (paramsFromForm) => {
     setFilters(paramsFromForm);
-  };
-
-  const onReset = () => {
-    setFilters(initialFilters);
-    fetchUsers(page, pageSize);
-    setMode("clear");
-  };
-
-  const handleModeChange = (e) => {
-    const value = e.target.value;
-
-    setMode(value);
-
-    if (value === "clear") {
-      onReset();
-    }
-    if (value === "filter") {
-      handleSearch(filters);
-    }
   };
 
   const columns = [
@@ -264,7 +212,7 @@ const UserList = () => {
       key: "view",
       width: 90,
       align: "center",
-      render: (_, record) => <p>View</p>,
+      render: () => <p className="text-blue-500 hover:text-blue-300">View</p>,
     },
   ];
 
@@ -274,51 +222,42 @@ const UserList = () => {
         {/* form search */}
         <FormSearch onChange={handleFormChange} formSearch={filters} />
         {/* group button */}
-
-        <div className="flex justify-between px-2">
-          <Button className={styles.createBtn} onClick={handleAdd}>
-            Create New Staff
-          </Button>
-          <Space>
-            <Radio.Group
-              onChange={handleModeChange}
-              value={mode}
-              style={{ display: "flex" }}
-            >
-              <Radio.Button value="filter" className={styles.baseButtonFilter}>
-                <FilterOutlined className="mr-1" />
-                Filter
-              </Radio.Button>
-
-              <Radio.Button
-                onChange={onReset}
-                className={styles.baseButtonClear}
-                value="clear"
-              >
-                Clear
-              </Radio.Button>
-            </Radio.Group>
-          </Space>
-        </div>
+        <Toolbar
+          mode={mode}
+          setMode={setMode}
+          pageSize={pagination.pageSize}
+          setPageSize={(ps) => setPagination({ ...pagination, pageSize: ps })}
+          onFilter={() => handleSearch(filters)}
+          onClear={handleClear}
+          onAdd={handleAdd}
+          pageSizeList={pageSizeList}
+        />
         <Divider></Divider>
         {/* table */}
-        <Table
-          rowKey="id"
-          columns={columns}
-          dataSource={Array.isArray(listDataFilter) ? listDataFilter : []}
-          loading={loading}
-          className={styles.customTable}
-          pagination={false}
-          onChange={handleTableChange}
-        />
-        <CustomPagination
-          pagination={pagination}
-          onChange={(page, pageSize) => {
-            setPagination((prev) => ({ ...prev, current: page, pageSize }));
-            fetchUsers(page, pageSize); // gọi API theo page
-          }}
-        />
-
+        {loading ? (
+          <div className="flex justify-center">
+            <Spin tip="Loading" size="large"></Spin>
+          </div>
+        ) : (
+          <>
+            <Table
+              rowKey="id"
+              columns={columns}
+              dataSource={Array.isArray(listDataFilter) ? listDataFilter : []}
+              loading={loading}
+              className={styles.customTable}
+              pagination={false}
+              onChange={handleTableChange}
+            />
+            <CustomPagination
+              pagination={pagination}
+              onChange={(page, pageSize) => {
+                setPagination((prev) => ({ ...prev, current: page, pageSize }));
+                fetchUsers(page, pageSize); // gọi API theo page
+              }}
+            />
+          </>
+        )}
         {/* add modal */}
         <UserFormModal
           open={isModalOpen}

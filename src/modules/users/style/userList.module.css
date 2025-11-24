@@ -8,7 +8,7 @@
 }
 
 .customTable {
-  background: "#ffffff";
+  background: "#f5f5f5";
   color: "#000000";
    max-height: 550px !important;
   overflow-y: auto;
@@ -64,7 +64,7 @@
 }
 
 .customSelect :global(.ant-select-selector) {
-  background: #f9fafb !important;
+  background: #f9fafb;
   color: #333 !important;
   width: 100% !important;
   transition: all 0.2s ease;

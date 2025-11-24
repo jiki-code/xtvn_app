@@ -1,11 +1,10 @@
 "use client";
-
 import { Pagination } from "antd";
 
 const CustomPagination = ({ pagination, onChange }) => {
   const itemRender = (page, type, originalElement) => {
     if (type === "prev") {
-      return <button >Prev</button>;
+      return <button> Prev</button>;
     }
     if (type === "next") {
       return <button >Next</button>;
@@ -23,7 +22,7 @@ const CustomPagination = ({ pagination, onChange }) => {
       showSizeChanger={false}
       itemRender={itemRender}
       showTotal={(total, range) =>
-        `Total ${range[0]} - ${range[1]} / ${total} of`
+        `Total ${range[0]} - ${range[1]} / ${total} of `
       }
     />
   );
