@@ -8,8 +8,7 @@ import {
   reqCreateUserCheckIn,
   reqCreateUserCheckOut,
   reqCreateUserBreakIn,
-  reqCreateUserBreakOut,
-  reqGetAllUsersAttendance
+  reqCreateUserBreakOut
 } from "@/feautures/api/attendance";
 
 export default function HomePage() {
@@ -191,8 +190,6 @@ export default function HomePage() {
       alert("Failed to end break. Please try again.");
     }
   };
-
-  const handleOk = () => setIsModalVisible(false);
 
   const [modalConfig, setModalConfig] = useState({
     visible: false,
