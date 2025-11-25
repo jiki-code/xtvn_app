@@ -110,41 +110,69 @@ export default function HomePage() {
     });
   };
 
-  const handleBreakOk = () => {
-    if (!breakType) return; 
+  const handleBreakOk = async () => {
+    if (!breakType) return;
     const now = new Date();
-    setBreakStartTime(now);
 
-    hideModal();
-    // Show success modal
-    showModal({
-      type: "breakSuccess",
-      title: "Break Started",
-      onOk: () => {
-        setIsOnBreak(true);
-        hideModal();
-        setBreakType(""); 
-        setBreakReason("");
-      },
-      extraData: { startTime: now }
-    });
+    try {
+      // Call Break In API
+      const res = await reqCreateUserBreakIn({
+        breakType,
+        note: breakReason,
+      });
+
+      console.log("Break In API Response:", res);
+
+      setBreakStartTime(now);
+      hideModal();
+
+      // Show success modal
+      showModal({
+        type: "breakSuccess",
+        title: "Break Started",
+        onOk: () => {
+          setIsOnBreak(true);
+          hideModal();
+          setBreakType("");
+          setBreakReason("");
+        },
+        extraData: { startTime: now }
+      });
+    } catch (error) {
+      console.error("Break In API Error:", error);
+      alert("Failed to start break. Please try again.");
+    }
   };
 
-  const handleBreakOut = () => {
+  const handleBreakOut = async () => {
     const now = new Date();
-    // Show break end success modal
-    showModal({
-      type: "breakEndSuccess",
-      title: "Break Ended",
-      onOk: () => {
-        setIsOnBreak(false);
-        hideModal();
-      },
-      extraData: { 
-        endTime: now,
-        breakType, 
-      }
-    });
+
+    try {
+      // Call Break Out API
+      const res = await reqCreateUserBreakOut({
+        breakType,
+        endTime: now.toISOString(),
+      });
+
+      console.log("Break Out API Response:", res);
+
+      // Show success modal
+      showModal({
+        type: "breakEndSuccess",
+        title: "Break Ended",
+        onOk: () => {
+          setIsOnBreak(false);
+          hideModal();
+        },
+        extraData: {
+          endTime: now,
+          breakType,
+        }
+      });
+    } catch (error) {
+      console.error("Break Out API Error:", error);
+      alert("Failed to end break. Please try again.");
+    }
   };
 
   const handleOk = () => setIsModalVisible(false);
@@ -280,10 +308,10 @@ export default function HomePage() {
               style={{ display: "flex", flexDirection: "column", gap: 12 }}
             >
               <Radio 
-                value="break"
+                value="personal"
                 className="custom-radio"
               >Break</Radio>
-              {breakType === "break" && (
+              {breakType === "personal" && (
                 <Input
                   placeholder="Enter reason"
                   value={breakReason}
