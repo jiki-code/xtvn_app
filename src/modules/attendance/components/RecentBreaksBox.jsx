@@ -7,9 +7,6 @@ export const RecentBreaksBox = ({ breaks = [] }) => {
   const leftItems = items.filter((_, i) => i % 2 === 0);
   const rightItems = items.filter((_, i) => i % 2 !== 0);
 
-  // Determine max rows
-  const maxRows = Math.max(leftItems.length, rightItems.length);
-
   return (
     <div
       style={{
@@ -31,22 +28,22 @@ export const RecentBreaksBox = ({ breaks = [] }) => {
               key={index}
               style={{
                 display: "flex",
-                justifyContent: "space-between",
+                flexDirection: "column",
                 borderBottom: "1px solid #eee",
                 padding: "8px 0",
               }}
             >
-              <div>
-                <p style={{ margin: 0, fontWeight: "bold", color: "#000" }}>{item.name}</p>
-                <p style={{ margin: 0, fontSize: "0.9rem", color: "#555" }}>
+              <p style={{ margin: 0, fontWeight: "bold", color: "#000" }}>{item.name}</p>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div style={{ fontSize: "0.9rem", color: "#555" }}>
                   <span>{item.id}</span>{" "}
                   <span style={{ marginLeft: 6, fontWeight: "bold", color: "#3FC348" }}>
                     {item.type}
                   </span>
-                </p>
-              </div>
-              <div style={{ fontSize: "0.85rem", color: "#999" }}>
-                {item.timeAgo || "1 minute ago"}
+                </div>
+                <div style={{ fontSize: "0.85rem", color: "#999" }}>
+                  {item.timeAgo || "1 minute ago"}
+                </div>
               </div>
             </div>
           ))}
@@ -62,22 +59,22 @@ export const RecentBreaksBox = ({ breaks = [] }) => {
               key={index}
               style={{
                 display: "flex",
-                justifyContent: "space-between",
+                flexDirection: "column",
                 borderBottom: "1px solid #eee",
                 padding: "8px 0",
               }}
             >
-              <div>
-                <p style={{ margin: 0, fontWeight: "bold", color: "#000" }}>{item.name}</p>
-                <p style={{ margin: 0, fontSize: "0.9rem", color: "#555" }}>
+              <p style={{ margin: 0, fontWeight: "bold", color: "#000" }}>{item.name}</p>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div style={{ fontSize: "0.9rem", color: "#555" }}>
                   <span>{item.id}</span>{" "}
                   <span style={{ marginLeft: 6, fontWeight: "bold", color: "#3FC348" }}>
                     {item.type}
                   </span>
-                </p>
-              </div>
-              <div style={{ fontSize: "0.85rem", color: "#999" }}>
-                {item.timeAgo || "1 minute ago"}
+                </div>
+                <div style={{ fontSize: "0.85rem", color: "#999" }}>
+                  {item.timeAgo || "1 minute ago"}
+                </div>
               </div>
             </div>
           ))}
