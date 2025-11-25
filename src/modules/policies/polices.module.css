@@ -1,0 +1,17 @@
+.pageWrapper {
+  min-height: 80vh;
+  display: flex;
+  justify-content: center;
+  overflow: auto;
+}
+
+.container {
+  max-width: 100%;
+  width: 100%;
+  margin: 0 auto;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.08);
+  border: none !important;
+}
+
