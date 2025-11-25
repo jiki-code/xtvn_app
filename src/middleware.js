@@ -4,7 +4,6 @@ export function middleware(request) {
   const { pathname } = request.nextUrl;
  const url = request.nextUrl;
 
-  // // Nếu vào homepage "/" → chuyển sang "/auth"
   // if (url.pathname === "/") {
   //   url.pathname = "/auth";
   //   return NextResponse.redirect(url);

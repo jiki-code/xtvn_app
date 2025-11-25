@@ -31,3 +31,8 @@ export const pageSizeList = [
   { label: "50", value: 50 },
 ];
 
+export const defaultPolicyHtml = `
+  <p><strong>1. Employee Conduct Policies</strong></p>
+  <p>One of the types of company policy is Employee conduct policies...</p>
+`;
+

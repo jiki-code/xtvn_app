@@ -8,6 +8,7 @@ import {
   HomeOutlined,
   ThunderboltOutlined,
   UserOutlined,
+  SettingOutlined,
   MoonOutlined,
   SunOutlined,
   MenuFoldOutlined,
@@ -37,6 +38,11 @@ const items = [
     key: "/user3",
     icon: <UserOutlined />,
     label: <Link href="/policies">Company Policies</Link>,
+  },
+    {
+    key: "/setting",
+    icon: <SettingOutlined />,
+    label: <Link href="/setting">Settings</Link>,
   },
 ];
 
