@@ -208,7 +208,7 @@ const UserList = () => {
       render: (_, record) => (
         <Button
           onClick={() => onResetPassword(record.id)}
-          className="text-black! bg-white! border! border-gray-300!"
+          className="text-black! bg-white!  border-gray-300! hover:border-blue-600! "
         >
           Reset password
         </Button>
