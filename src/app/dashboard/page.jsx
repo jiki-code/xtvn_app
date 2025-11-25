@@ -33,6 +33,7 @@ export default function HomePage() {
   const [checkInHover, setCheckInHover] = useState(false);
   const [breakInHover, setBreakInHover] = useState(false);
   const [hover, setHover] = useState(false);
+  const [breakId, setBreakId] = useState(null);
 
   // ---- Refs ----
   const popupTimerRef = useRef(null);
@@ -89,25 +90,35 @@ export default function HomePage() {
   );
 
   // Actual check-out logic
-  const handleCheckOut = () => {
-    // Close modal
-    hideModal();
+  const handleCheckOut = async () => {
+    hideModal(); 
+    try {
+      // Call Checkout API
+      const res = await reqCreateUserCheckOut();
+      console.log("Checkout API Response:", res);
 
-    // Reset states
-    setIsCheckedIn(false);
-    setShowPopup(false);
-    setMissedTime(0);
-    setStartCounting(false);
-    popupCountRef.current = 0;
-    if (popupTimerRef.current) clearTimeout(popupTimerRef.current);
-    if (missedTimerRef.current) clearInterval(missedTimerRef.current);
+      // Reset states
+      setIsCheckedIn(false);
+      //setShowPopup(false);
+      setMissedTime(0);
+      setStartCounting(false);
+      popupCountRef.current = 0;
+      if (popupTimerRef.current) clearTimeout(popupTimerRef.current);
+      if (missedTimerRef.current) clearInterval(missedTimerRef.current);
 
-    // Show a success modal
-    showModal({
-      type: "checkoutSuccess",
-      title: "Success",
-      onOk: hideModal
-    });
+      // Remove localStorage flag
+      localStorage.removeItem("checkedIn");
+
+      // Show success modal
+      showModal({
+        type: "checkoutSuccess",
+        title: "Success",
+        onOk: hideModal
+      });
+    } catch (error) {
+      console.error("Checkout API Error:", error);
+      alert("Failed to check out. Please try again.");
+    }
   };
 
   const handleBreakOk = async () => {
@@ -122,6 +133,9 @@ export default function HomePage() {
       });
 
       console.log("Break In API Response:", res);
+
+      // Store the breakId
+      setBreakId(res.data.breakId);
 
       setBreakStartTime(now);
       hideModal();
@@ -145,16 +159,19 @@ export default function HomePage() {
   };
 
   const handleBreakOut = async () => {
+    if (!breakId) return alert("No active break found");
     const now = new Date();
 
     try {
       // Call Break Out API
       const res = await reqCreateUserBreakOut({
-        breakType,
-        endTime: now.toISOString(),
+        breakId,
       });
 
       console.log("Break Out API Response:", res);
+
+      // Clear breakId since break is ended
+      setBreakId(null);
 
       // Show success modal
       showModal({
@@ -264,13 +281,6 @@ export default function HomePage() {
 
     if (popupCountRef.current < 2) scheduleNextPopup();
   };
-
-  // const handleBreakOk = () => {
-  //   console.log("Selected:", breakType, "Reason:", breakReason);
-  //   setIsBreakModalVisible(false);
-  //   setBreakType("");
-  //   setBreakReason("");
-  // };
 
   const handleBreakCancel = () => {
     //setIsBreakModalVisible(false);
