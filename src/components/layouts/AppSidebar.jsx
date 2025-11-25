@@ -26,7 +26,7 @@ const items = [
   {
     key: "/user1",
     icon: <UserOutlined />,
-    label: <Link href="/attendances">Attendances</Link>,
+    label: <Link href="/attendance">Attendances</Link>,
   },
   {
     key: "/user2",
