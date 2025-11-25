@@ -113,7 +113,9 @@ const UserList = () => {
       const matchName =
         !name || item.name.toLowerCase().includes(name.toLowerCase());
 
-      const matchDepartment = !department || item.department.toLowerCase() === department.toLowerCase();
+      const matchDepartment =
+        !department ||
+        item.department.toLowerCase() === department.toLowerCase();
 
       const matchRole = !role || item.role.toLowerCase() === role.toLowerCase();
 
