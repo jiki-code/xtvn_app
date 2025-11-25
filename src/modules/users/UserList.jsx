@@ -180,7 +180,7 @@ const UserList = () => {
         const onChangeStatus = async (record) => {
           let newValue = "";
           if (record.status === "active") {
-            newValue = "off";
+            newValue = "inactive";
           } else {
             newValue = "active";
           }
@@ -208,7 +208,7 @@ const UserList = () => {
       render: (_, record) => (
         <Button
           onClick={() => onResetPassword(record.id)}
-          className="text-black! bg-white! border! border-gray-300!"
+          className="text-black! bg-white!  border-gray-300! hover:border-blue-600! "
         >
           Reset password
         </Button>
@@ -239,7 +239,7 @@ const UserList = () => {
           onAdd={handleAdd}
           pageSizeList={pageSizeList}
         />
-        <Divider className="border-t-gray-200! my-3!" />
+        <Divider className="border-t-gray-200/70! border-1.5! my-3!" />
         {/* table */}
         {loading ? (
           <div className="flex justify-center">

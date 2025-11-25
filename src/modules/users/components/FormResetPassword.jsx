@@ -14,7 +14,7 @@ const FormResetPassword = ({ open, onCancel, onSubmit }) => {
       open={open}
       width={320}
       centered
-      title="Reset Password"
+      title="Reset password"
       onCancel={onCancel}
       onOk={handleOk}
       okText={"Save"}
