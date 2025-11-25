@@ -5,6 +5,8 @@ import { roleList, departmanList } from "@/data/common";
 
 const FormSearch = ({ onChange, formSearch }) => {
   const [form, setForm] = useState(formSearch);
+  const departmentOptions = [{ value: "", label: "All" }, ...departmanList];
+  const roleOptions = [{ value: "", label: "All" }, ...roleList];
 
   useEffect(() => {
     setForm(formSearch);
@@ -17,7 +19,7 @@ const FormSearch = ({ onChange, formSearch }) => {
         ([_, v]) => v !== undefined && v !== "" && v !== null
       )
     );
-    onChange?.(cleaned); 
+    onChange?.(cleaned);
   };
 
   const handleInputChange = (e) => {
@@ -55,11 +57,11 @@ const FormSearch = ({ onChange, formSearch }) => {
 
         <div className="w-full">
           <Select
-            placeholder="Search by Department"
+            placeholder="All"
             className="w-full"
             value={form?.department}
             onChange={handleSelectChange("department")}
-            options={departmanList}
+            options={departmentOptions}
           />
         </div>
 
@@ -76,11 +78,11 @@ const FormSearch = ({ onChange, formSearch }) => {
 
         <div className="w-full">
           <Select
-            placeholder="Search by Position"
+            placeholder="All"
             className="w-full"
             value={form?.role}
             onChange={handleSelectChange("role")}
-            options={roleList}
+            options={roleOptions}
           />
         </div>
       </div>
