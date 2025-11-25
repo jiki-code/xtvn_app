@@ -1,7 +1,7 @@
 "use client";
 
-import { Layout, Typography } from "antd";
-import UserList from "@/modules/users/UserList";
+import { PoliciesPage } from "@/modules/policies/PoliciesPage";
+import { Layout } from "antd";
 
 const { Content } = Layout;
 
@@ -16,11 +16,11 @@ export default function StaffPage() {
     >
       <div className="pt-2 pl-5 gap-0">
         <div className="text-2xl text-black">Hi, Admin!</div>
-        <div className="text-gray-500 text-sm">Staff</div>
+        <div className="text-gray-500 text-sm">policies</div>
       </div>
 
       <Content style={{ padding: 20 }}>
-        <UserList />
+        <PoliciesPage />
       </Content>
     </Layout>
   );
