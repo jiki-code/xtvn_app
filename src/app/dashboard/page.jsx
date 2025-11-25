@@ -4,6 +4,14 @@ import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 import { Button, Modal, Radio, Input } from "antd";
 
+import {
+  reqCreateUserCheckIn,
+  reqCreateUserCheckOut,
+  reqCreateUserBreakIn,
+  reqCreateUserBreakOut,
+  reqGetAllUsersAttendance
+} from "@/feautures/api/attendance";
+
 export default function HomePage() {
   // ---- State ----
   const [currentDate, setCurrentDate] = useState("");
@@ -38,11 +46,17 @@ export default function HomePage() {
     showModal({
       type: "checkin",
       title: "Check In",
-      //onOk: hideModal,
-      onOk: () => {
-        setIsCheckedIn(true);
-        hideModal();
-        scheduleNextPopup();
+      onOk: async () => {
+        try {
+          const res = await reqCreateUserCheckIn();   
+          console.log("Check In API Response:", res);
+          setIsCheckedIn(true);
+          localStorage.setItem("checkedIn", "true");
+          hideModal();
+          scheduleNextPopup();
+        } catch (error) {
+          console.error("Check In API Error:", error);
+        }
       },
     });
   };
@@ -162,7 +176,7 @@ export default function HomePage() {
 
   const generateRandomPopup = () => {
     const now = new Date();
-    /*const startDate = new Date();
+    const startDate = new Date();
     startDate.setHours(9, 0, 0, 0);
     const endDate = new Date();
     endDate.setHours(19, 0, 0, 0); 
@@ -172,9 +186,9 @@ export default function HomePage() {
 
     return new Date(
       effectiveStart.getTime() + Math.random() * (endDate.getTime() - effectiveStart.getTime())
-    );*/
+    );
 
-    return new Date(now.getTime() + Math.random() * 60_000 + 30_000); 
+    // return new Date(now.getTime() + Math.random() * 60_000 + 30_000); 
   };
 
   const scheduleNextPopup = () => {
@@ -456,6 +470,13 @@ export default function HomePage() {
       scheduleNextPopup();
     }
   }, [isCheckedIn]);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("checkedIn");
+    if (saved === "true") {
+      setIsCheckedIn(true);
+    }
+  }, []);
 
 
   // ---- Render ----
