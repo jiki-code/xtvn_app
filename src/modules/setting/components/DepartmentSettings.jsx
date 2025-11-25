@@ -63,7 +63,7 @@ export function DepartmentSettings({ departments, onAdd, onDelete, onEdit }) {
         ))}
         <Space className="w-full pb-3">
           <Input
-            style={{ width: "323px" }}
+            style={{ width: "270px" }}
             placeholder="Add new department"
             value={newDept}
             onChange={(e) => setNewDept(e.target.value)}
@@ -81,7 +81,7 @@ export function DepartmentSettings({ departments, onAdd, onDelete, onEdit }) {
 
       <div className="w-full flex items-center">
         <label className="w-[100px] text-md font-semibold">Link website</label>
-        <Input className="!w-[222px]" />
+        <Input className="!w-[170]" />
       </div>
     </Card>
   );
