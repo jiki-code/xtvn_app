@@ -5,7 +5,7 @@ export function CustomSwitch({ value, onChange }) {
 
   return (
     <Switch
-      checked={value}
+      checked={value === "active"}
       onChange={onChange}
       checkedChildren="Active"
       unCheckedChildren="Off"

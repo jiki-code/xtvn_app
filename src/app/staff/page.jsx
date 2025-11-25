@@ -4,7 +4,6 @@ import { Layout, Typography } from "antd";
 import UserList from "@/modules/users/UserList";
 
 const { Content } = Layout;
-const { Title } = Typography;
 
 export default function StaffPage() {
   return (
@@ -20,7 +19,7 @@ export default function StaffPage() {
         <div className="text-gray-500 text-sm">Staff</div>
       </div>
 
-      <Content style={{ padding: 18 }}>
+      <Content style={{ padding: 16 }}>
         <UserList />
       </Content>
     </Layout>

@@ -5,6 +5,8 @@ import { roleList, departmanList } from "@/data/common";
 
 const FormSearch = ({ onChange, formSearch }) => {
   const [form, setForm] = useState(formSearch);
+  const departmentOptions = [{ value: "", label: "All" }, ...departmanList];
+  const roleOptions = [{ value: "", label: "All" }, ...roleList];
 
   useEffect(() => {
     setForm(formSearch);
@@ -17,7 +19,7 @@ const FormSearch = ({ onChange, formSearch }) => {
         ([_, v]) => v !== undefined && v !== "" && v !== null
       )
     );
-    onChange?.(cleaned); 
+    onChange?.(cleaned);
   };
 
   const handleInputChange = (e) => {
@@ -43,8 +45,8 @@ const FormSearch = ({ onChange, formSearch }) => {
   };
 
   return (
-    <div className="py-5">
-      <div className="grid grid-cols-4 gap-4 w-full">
+    <div className="pb-4">
+      <div className="grid grid-cols-4 gap-3 w-full">
         <div className="w-full">
           <RangeDatePicker
             value={form.dates}
@@ -55,11 +57,11 @@ const FormSearch = ({ onChange, formSearch }) => {
 
         <div className="w-full">
           <Select
-            placeholder="Search by Department"
+            placeholder="All"
             className="w-full"
             value={form?.department}
             onChange={handleSelectChange("department")}
-            options={departmanList}
+            options={departmentOptions}
           />
         </div>
 
@@ -76,11 +78,11 @@ const FormSearch = ({ onChange, formSearch }) => {
 
         <div className="w-full">
           <Select
-            placeholder="Search by Position"
+            placeholder="All"
             className="w-full"
             value={form?.role}
             onChange={handleSelectChange("role")}
-            options={roleList}
+            options={roleOptions}
           />
         </div>
       </div>
