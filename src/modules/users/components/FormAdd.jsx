@@ -43,7 +43,7 @@ const UserFormModal = ({
   return (
     <Modal
       open={open}
-      title="Create New Staff"
+      title="Create new staff"
       onCancel={onCancel}
       onOk={handleOk}
       okText="Create"

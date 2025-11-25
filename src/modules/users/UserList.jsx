@@ -180,7 +180,7 @@ const UserList = () => {
         const onChangeStatus = async (record) => {
           let newValue = "";
           if (record.status === "active") {
-            newValue = "off";
+            newValue = "inactive";
           } else {
             newValue = "active";
           }
@@ -239,7 +239,7 @@ const UserList = () => {
           onAdd={handleAdd}
           pageSizeList={pageSizeList}
         />
-        <Divider className="border-t-gray-200! my-3!" />
+        <Divider className="border-t-gray-200/70! border-1.5! my-3!" />
         {/* table */}
         {loading ? (
           <div className="flex justify-center">

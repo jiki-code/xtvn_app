@@ -19,7 +19,7 @@ const handleClick = (value = "filter") => {
   return (
   <div className="flex justify-between">
     <Button className={styles.createBtn} onClick={onAdd}>
-      Create New Staff
+      Create new staff
     </Button>
     <Space>
       <Radio.Group style={{ display: "flex" }}>
