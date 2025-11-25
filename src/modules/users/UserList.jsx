@@ -19,6 +19,7 @@ import { FormSearch } from "./tables/FormSearch";
 import { CustomPagination } from "@/components/ui/CustomPagination";
 import { Toolbar } from "./components/ToolBar";
 import { getDataUser } from "./tables/getDataUser";
+import dayjs from "dayjs";
 const UserList = () => {
   // --- formSearch ---
   const initialFilters = {
@@ -113,17 +114,23 @@ const UserList = () => {
       const matchName =
         !name || item.name.toLowerCase().includes(name.toLowerCase());
 
-      const matchDepartment = !department || item.department.toLowerCase() === department.toLowerCase();
+      const matchDepartment =
+        !department ||
+        item.department.toLowerCase() === department.toLowerCase();
 
       const matchRole = !role || item.role.toLowerCase() === role.toLowerCase();
 
       let matchDate = true;
       if (start && end) {
         const itemDate = dayjs(item.createdAt);
+
+        const startDate = dayjs(start).startOf("day");
+        const endDate = dayjs(end).endOf("day");
+
         matchDate =
-          itemDate.isSame(start, "day") ||
-          itemDate.isSame(end, "day") ||
-          (itemDate.isAfter(start, "day") && itemDate.isBefore(end, "day"));
+          itemDate.isSame(startDate, "day") ||
+          itemDate.isSame(endDate, "day") ||
+          (itemDate.isAfter(startDate) && itemDate.isBefore(endDate));
       }
 
       return matchName && matchDepartment && matchRole && matchDate;
@@ -201,7 +208,7 @@ const UserList = () => {
       render: (_, record) => (
         <Button
           onClick={() => onResetPassword(record.id)}
-          className="text-black! bg-white!"
+          className="text-black! bg-white! border! border-gray-300!"
         >
           Reset password
         </Button>
@@ -210,9 +217,9 @@ const UserList = () => {
     {
       title: "View Deail",
       key: "view",
-      width: 90,
+      width: 110,
       align: "center",
-      render: () => <p className="text-blue-500 hover:text-blue-300">View</p>,
+      render: () => <p className=" hover:text-blue-500">View</p>,
     },
   ];
 
@@ -232,7 +239,7 @@ const UserList = () => {
           onAdd={handleAdd}
           pageSizeList={pageSizeList}
         />
-        <Divider></Divider>
+        <Divider className="border-t-gray-200! my-3!" />
         {/* table */}
         {loading ? (
           <div className="flex justify-center">

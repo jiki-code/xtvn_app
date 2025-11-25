@@ -43,8 +43,8 @@ const FormSearch = ({ onChange, formSearch }) => {
   };
 
   return (
-    <div className="py-5">
-      <div className="grid grid-cols-4 gap-4 w-full">
+    <div className="pb-4">
+      <div className="grid grid-cols-4 gap-3 w-full">
         <div className="w-full">
           <RangeDatePicker
             value={form.dates}

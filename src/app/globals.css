@@ -291,12 +291,11 @@ body {
 .custom-pagination {
   display: flex;
   justify-content: flex-end;
-  padding: 8px 16px;
+  padding: 18px 4px;
 }
 
-/* số trang bình thường */
 .custom-pagination .ant-pagination-item {
-  border-radius: 10px;
+  border-radius: 8px;
   background: #f1f5f9;
   border: none;
 }
@@ -315,7 +314,6 @@ body {
   color: #ffffff;
 }
 
-/* nút Quay lại / Tiếp */
 .custom-pagination .ant-pagination-prev .ant-pagination-item-link,
 .custom-pagination .ant-pagination-next .ant-pagination-item-link {
   border-radius: 10px;
@@ -341,7 +339,7 @@ body {
   color: #000000;
   cursor: pointer;
   user-select: none;
-  border-radius: 10px;
+  border-radius: 8px;
 }
 .ant-pagination .ant-pagination-prev button {
   background-color: #e8ecf5;
@@ -349,7 +347,7 @@ body {
   cursor: pointer;
   user-select: none;
   padding: 1px 12px;
-  border-radius: 10px;
+  border-radius: 8px;
 }
 ::-webkit-scrollbar {
   width: 8px;
