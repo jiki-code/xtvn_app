@@ -1,6 +1,6 @@
 export default function UnsupportedDevice() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-300 dark:from-slate-900 dark:to-slate-950 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-#001529 px-4">
       <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 p-8 max-w-md w-full text-center transition-all duration-300 animate-fadeIn">
         
         {/* ICON */}
@@ -43,9 +43,9 @@ export default function UnsupportedDevice() {
         {/* BUTTON */}
         <a
           href="/"
-          className="inline-flex items-center justify-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-md transition-all duration-300"
+          className="inline-flex items-center justify-center px-5 py-2.5 bg-blue-500 hover:bg-blue-700 text-white font-medium rounded-lg shadow-md transition-all duration-300"
         >
-          Back to Home
+          Back to Login
         </a>
       </div>
 

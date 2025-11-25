@@ -6,30 +6,8 @@ import AppSidebar from "./AppSidebar";
 import UnsupportedDevice from "@/components/layouts/UnsupportedDevice";
 import "@/styles/app-shell.css";
 import { HeaderApp } from "./HeaderLayout";
-
+import {useIsDesktop} from "@/hooks/useIsDesktop"
 const { Content } = Layout;
-
-// Hook nhỏ để check desktop hay không
-function useIsDesktop() {
-  const [isDesktop, setIsDesktop] = useState(true);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const mq = window.matchMedia("(min-width: 1024px)"); // lg breakpoint
-
-    const update = (e) => {
-      setIsDesktop(e.matches);
-    };
-
-    update(mq);
-
-    mq.addEventListener("change", update);
-    return () => mq.removeEventListener("change", update);
-  }, []);
-
-  return isDesktop;
-}
 
 export default function AppShell({ children }) {
   const [isDark, setIsDark] = useState(false);
@@ -54,7 +32,6 @@ export default function AppShell({ children }) {
     else document.documentElement.classList.remove("dark");
   }, [isDark]);
 
-  // Lưu trạng thái collapsed
   useEffect(() => {
     if (typeof window === "undefined") return;
 
