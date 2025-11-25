@@ -1,0 +1,45 @@
+.pageWrapper {
+  height: auto;
+  overflow: auto;
+}
+.containerCard {
+  padding: 0;
+  max-width: "100%";
+  margin: 0 auto;
+  background: #fff !important;
+  border-radius: 5px;
+  border: none;
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.08);
+  margin-bottom: 16px;
+  padding: 8px;
+}
+
+:global(.ant-card-head-title) {
+  color: #333 !important;
+  font-size: 20px;
+}
+
+:global(.ant-card) {
+  background: #fff !important;
+  color: #333 !important;
+  border: none;
+
+
+}
+
+:global(.ant-input-number-outlined:focus-within) {
+ background: #f5f5f5 !important;
+}
+
+
+:global(.ant-input-number-handler) {
+  background: #fff !important;
+  color: #fff !important;
+
+}
+
+:global(.ant-select-selector) {
+  background: #fff !important;
+  color: #fff !important;
+
+}
