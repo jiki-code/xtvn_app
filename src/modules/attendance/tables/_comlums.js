@@ -1,13 +1,17 @@
 import { formatDateTimeStamp } from "@/lib/utils"
 export const columnsAttendance = [
-
   {
     title: "Date",
     dataIndex: "work_date",
     key: "work_date",
-    width: 150,
+    width: 160,
     align: 'center',
-    sorter: (a, b) => a.work_date.localeCompare(b.work_date),
+    sorter: (a, b) =>
+      new Date(a.work_date).getTime() - new Date(b.work_date).getTime(),
+    render: (value) => {
+      if (!value) return "-";
+      return formatDateTimeStamp(value, true)
+    },
   },
   {
     title: "Department",
@@ -39,7 +43,12 @@ export const columnsAttendance = [
     key: "check_in",
     width: 160,
     align: 'center',
-    sorter: (a, b) => a.check_in.localeCompare(b.check_in),
+    sorter: (a, b) =>
+      new Date(a.check_in).getTime() - new Date(b.check_in).getTime(),
+    render: (value) => {
+      if (!value) return "-";
+      return formatDateTimeStamp(value, true)
+    },
   },
   {
     title: "Break In",
@@ -63,7 +72,12 @@ export const columnsAttendance = [
     key: "check_out",
     width: 160,
     align: 'center',
-    sorter: (a, b) => a.check_out.localeCompare(b.check_out),
+    sorter: (a, b) =>
+      new Date(a.check_out).getTime() - new Date(b.check_out).getTime(),
+    render: (value) => {
+      if (!value) return "-";
+      return formatDateTimeStamp(value, true)
+    },
   },
   {
     title: "Total",
