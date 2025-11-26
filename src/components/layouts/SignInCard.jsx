@@ -42,6 +42,7 @@ export function SignInCard() {
         refreshToken: data?.refreshToken ?? "",
         createdAt: data?.user?.createdAt ?? "",
         updatedAt: data?.user?.updatedAt ?? "",
+        user_id: data?.user?.user_id ?? "",
 
       };
       if (user) localStorage.setItem("user_profile", JSON.stringify(user));
