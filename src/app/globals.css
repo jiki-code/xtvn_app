@@ -349,6 +349,13 @@ body {
   border-radius: 8px;
 }
 
+.custom-pagination .ant-pagination-disabled button {
+  background-color: #f3f3f3 !important;
+  color: #9ca3af !important;
+  cursor: not-allowed !important;
+  opacity: 0.5 !important;
+}
+
 .ant-pagination .ant-pagination-next button:hover,
 .ant-pagination .ant-pagination-prev button:hover {
   background-color: #1677ff;

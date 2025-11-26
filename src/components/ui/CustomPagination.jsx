@@ -4,10 +4,10 @@ import { Pagination } from "antd";
 const CustomPagination = ({ pagination, onChange }) => {
   const itemRender = (page, type, originalElement) => {
     if (type === "prev") {
-      return <button> Prev</button>;
+      return <button disabled={pagination?.hasPrevious}>Prev</button>;
     }
     if (type === "next") {
-      return <button >Next</button>;
+      return <button disabled={pagination?.hasNext}>Next</button>;
     }
     return originalElement;
   };
@@ -22,10 +22,10 @@ const CustomPagination = ({ pagination, onChange }) => {
       showSizeChanger={false}
       itemRender={itemRender}
       showTotal={(total, range) =>
-        `Total ${range[0]} - ${range[1]} / ${total} of `
+        `Showing ${range[0]} - ${range[1]} of ${total}  entries`
       }
     />
   );
 };
 
-export  {CustomPagination};
+export { CustomPagination };

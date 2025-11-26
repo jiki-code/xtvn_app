@@ -22,7 +22,6 @@ const UserFormModal = ({
           email: initialValues.email,
           role: initialValues.role,
           password: initialValues.password,
-          username: initialValues.username,
           department: initialValues.department,
           user_id: initialValues.user_id
         });
@@ -51,7 +50,7 @@ const UserFormModal = ({
     >
       <Form layout="vertical" form={form}>
         <Form.Item
-          name="username"
+          name="name"
           label="Name"
           rules={[{ required: true, message: "Please enter name" }]}
         >
