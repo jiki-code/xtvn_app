@@ -1,22 +1,31 @@
 "use client";
 
 import { Card, Divider } from "antd";
-import React, { useState } from "react";
+import React from "react";
 import styles from "../setting.module.css";
 
-export function RandomCheckSettings() {
-  const [randomCheckTime, setRandomCheckTime] = useState(360);
-  const [randomCheckCount, setRandomCheckCount] = useState(2);
-
-  const handleChange = (e, type = "type_1", maxLength) => {
+export function RandomCheckSettings({ form, onRandomChange }) {
+  const handleChange = (e, fieldName, maxLength) => {
     let value = e.target.value;
-      if (value.length > maxLength) value = value.slice(0, maxLength);
-    if (type === "type_1") {
-      setRandomCheckTime(value);
-    } else {
-      setRandomCheckCount(value);
+    value = value.replace(/\D/g, "");
+
+    if (maxLength && value.length > maxLength) {
+      value = value.slice(0, maxLength);
+    }
+
+    const numValue = value === "" ? undefined : Number(value);
+
+    form.setFieldsValue({
+      [fieldName]: numValue,
+    });
+
+    if (onRandomChange) {
+      onRandomChange(fieldName, numValue);
     }
   };
+
+  const randomCheckTime = form.getFieldValue("randomCheckTime");
+  const randomCheckCount = form.getFieldValue("randomCheckCount");
 
   return (
     <Card title="Random roll up" className={styles.containerCard}>
@@ -30,11 +39,11 @@ export function RandomCheckSettings() {
           <div className="flex">
             <input
               name="randomCheckTime"
-              value={randomCheckTime}
-              onChange={(e) => handleChange(e, "type_1", 3)}
+              value={randomCheckTime ?? ""}
+              onChange={(e) => handleChange(e, "randomCheckTime", 3)}
               type="number"
               min={0}
-              className="w-[100px] rounded-lg text-black! border-gray-400 border text-sm px-3 py-2 focus:outline-none focus:ring-0.5 focus:ring-blue-500 focus:border-blue-500"
+              className="w-[100px] rounded-lg !text-black border-gray-400 border text-sm px-3 py-2 focus:outline-none focus:ring-0.5 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
           <span className="text-gray-500 pl-1">minute</span>
@@ -48,11 +57,11 @@ export function RandomCheckSettings() {
           <div className="flex gap-2">
             <input
               name="randomCheckCount"
-              value={randomCheckCount}
-              onChange={(e) => handleChange(e, "type_2", 2)}
+              value={randomCheckCount ?? ""}
+              onChange={(e) => handleChange(e, "randomCheckCount", 2)}
               type="number"
               min={0}
-              className="w-[100px] rounded-lg text-black! border-gray-400 border text-sm px-3 py-2 focus:outline-none focus:ring-0.5 focus:ring-blue-500 focus:border-blue-500"
+              className="w-[100px] rounded-lg !text-black border-gray-400 border text-sm px-3 py-2 focus:outline-none focus:ring-0.5 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
           <span className="text-gray-500 pl-1">time</span>

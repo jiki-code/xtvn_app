@@ -63,12 +63,23 @@ const UserList = () => {
   };
   // submit add
   const handleSubmitUser = async (values) => {
+    const payload = {
+      email: values.email,
+      password: values.password,
+      role: values.role,
+      name: values.name,
+      status:  values.status,
+      department:  values.department,
+      position: values.department,
+      user_id: values.user_id,
+      status: 'active',
+
+    };
     try {
       setSubmitLoading(true);
 
-      values.name = values.username;
       setIsModalOpen(false);
-      await reqCreateUser(values);
+      await reqCreateUser(payload);
       toast.success("Added user succesfully");
       fetchUsers(page, pageSize);
     } catch (err) {
@@ -260,7 +271,7 @@ const UserList = () => {
               pagination={pagination}
               onChange={(page, pageSize) => {
                 setPagination((prev) => ({ ...prev, current: page, pageSize }));
-                fetchUsers(page, pageSize); // gọi API theo page
+                fetchUsers(page, pageSize);
               }}
             />
           </>

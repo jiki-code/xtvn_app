@@ -13,9 +13,9 @@ export function getDataUser(initialFilters) {
     try {
       setLoading(true);
       const res = await reqGetAllUsers({ page, limit });
-      const dataRes = res.data || res;
+      const dataRes = res || res.data;
       const users = dataRes.users || dataRes.data?.users || [];
-      const pagi = dataRes.pagination || dataRes.data?.pagination || {};
+      const pagi = dataRes.pagination || dataRes?.data?.pagination || {};
 
       setData(users);
       setListDataFilter(users);
@@ -23,6 +23,9 @@ export function getDataUser(initialFilters) {
         current: pagi.currentPage || page,
         pageSize: pagi.limit || limit,
         total: pagi.total || users.length || 0,
+        hasNext: pagi.hasNext || false,
+        hasPrevious: pagi.hasPrevious || false,
+
       });
     } catch (err) {
       toast.error(err.message);
