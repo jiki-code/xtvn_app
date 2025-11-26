@@ -397,14 +397,19 @@ export default function HomePage() {
       {/* Time Box */}
       <TimeBox currentDay={currentDay} dayList={day} currentTime={currentTime} />
       {/* Buttons */}
-      <DashboardButton type="checkin" onClick={() => !isCheckedIn && handleCheckIn()} isActive={isCheckedIn}>
+      <DashboardButton
+        type="checkin"
+        onClick={() => !isCheckedIn && handleCheckIn()}
+        isActive={isCheckedIn}
+        disabled={isCheckedIn}
+      >
         Check In
       </DashboardButton>
+
 
       <DashboardButton
         type="break"
         onClick={() => {
-          if (!isCheckedIn) return; 
           isOnBreak
             ? handleBreakOut()
             : showModal({ type: "break", title: "Break In Detail", onOk: handleBreakOk });
@@ -415,9 +420,18 @@ export default function HomePage() {
         {isOnBreak ? "Break Out" : "Break In"}
       </DashboardButton>
 
-      <DashboardButton type="checkout" onClick={() => { if (!isCheckedIn || isOnBreak) return; handleCheckOutClick(); }} isActive={isCheckedIn && !isOnBreak}>
+      <DashboardButton
+        type="checkout"
+        onClick={() => {
+          if (!isCheckedIn || isOnBreak) return;
+          handleCheckOutClick();
+        }}
+        isActive={isCheckedIn && !isOnBreak}
+        disabled={!isCheckedIn || isOnBreak}   
+      >
         Check Out
       </DashboardButton>
+
 
       <AppModal
         visible={modalConfig.visible}
