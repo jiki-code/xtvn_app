@@ -1,7 +1,19 @@
 import { apiRequest } from "@/helpers/apiRequest";
 
-const reqGetAllUsersAttendance = async (params) => {
-  const res = await apiRequest("/attendance", {
+const reqGetAllUsersBreakSession = async (params) => {
+  const res = await apiRequest("/break-session", {
+    method: "GET",
+    queryParams: {
+      page: String(params.page),         
+      limit: String(params.limit),
+    },
+
+  });
+  return res;
+}
+
+const reqGetAllUsersBreakSessionReport = async (params) => {
+  const res = await apiRequest("/break-session/report", {
     method: "GET",
     queryParams: {
       page: String(params.page),         
@@ -47,4 +59,4 @@ export const reqCreateUserBreakOut = async (body) => {
 };
 
 
-export { reqGetAllUsersAttendance, reqCreateUserCheckIn, reqCreateUserCheckOut, reqCreateUserBreakIn, reqCreateUserBreakOut }
+export { reqGetAllUsersBreakSessionReport , reqGetAllUsersBreakSession, reqCreateUserCheckIn, reqCreateUserCheckOut, reqCreateUserBreakIn, reqCreateUserBreakOut }

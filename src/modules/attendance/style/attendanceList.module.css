@@ -179,3 +179,58 @@
 :global(.custom-switch .ant-switch-inner) {
   padding-top: 4px;
 }
+.breaktitle {
+  font-weight: bold;
+  color: #000;
+}
+.breaktitlee {
+  color: #7D8BAA;
+  margin-bottom: 16px;
+}
+.cont {
+  display: flex;
+  gap: 16px;
+}
+.cont2 {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.cont3 {
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid #eee;
+  padding: 8px 0;
+}
+.cont4 {
+  margin: 0;
+  font-weight: bold;
+  color: #000;
+}
+.cont5 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cont6 {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.cont7 {
+  margin-left: 6px;
+  font-weight: bold;
+  color: #3FC348;
+}
+
+.cont8 {
+  font-size: 0.85rem;
+  color: #999;
+}
+
+.contb {
+  width: 1px;
+  background: #eee;
+}

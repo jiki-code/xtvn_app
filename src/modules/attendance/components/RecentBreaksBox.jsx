@@ -1,85 +1,116 @@
 "use client";
 
-export const RecentBreaksBox = ({ breaks = [] }) => {
-  const items = breaks;
+import { useState, useEffect } from "react";
+import { toast } from "react-toastify";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import { reqGetAllUsersBreakSession } from "@/feautures/api/attendance";
+import styles from "../style/attendanceList.module.css";
 
-  // Split items into left and right columns
-  const leftItems = items.filter((_, i) => i % 2 === 0);
-  const rightItems = items.filter((_, i) => i % 2 !== 0);
+dayjs.extend(relativeTime);
+
+export const RecentBreaksBox = () => {
+  const [breaks, setBreaks] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const fetchBreaks = async () => {
+    try {
+      setLoading(true);
+      const res = await reqGetAllUsersBreakSession({ page: 1, limit: 10 });
+      const dataRes = res.data || res;
+      const breaksData = dataRes.breaks || dataRes.data?.breaks || [];
+
+      const formatted = breaksData
+        .sort((a, b) => new Date(b.started_at) - new Date(a.started_at)) 
+        .map((b) => ({
+          id: b.user_id,
+          name: b.user_name, 
+          type: b.break_type === "personal" ? "Break" : "Toilet",
+          started_at: b.started_at,
+          note: b.note,
+        }));
+
+      setBreaks(formatted);
+    } catch (err) {
+      toast.error(err.message || "Failed to fetch breaks");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch breaks on mount and refresh every minute
+  useEffect(() => {
+    fetchBreaks();
+    const interval = setInterval(fetchBreaks, 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Compute left/right columns
+  const leftItems = breaks.filter((_, i) => i % 2 === 0);
+  const rightItems = breaks.filter((_, i) => i % 2 !== 0);
+
+  // Function to compute dynamic timeAgo
+  const timeAgo = (date) => dayjs().to(dayjs(date));
 
   return (
-    <div
-      style={{
-        borderRadius: "10px",
-        border: "1px solid #eee",
-        padding: "16px",
-      }}
-    >
-      <h3 style={{ fontWeight: "bold", color: "#000" }}>RECENT BREAKS</h3>
-      <h4 style={{ color: "#7D8BAA", marginBottom: "16px" }}>
-        Real time update of employees recent breaks
+    <div className={styles.breakContainer}>
+      <h3 className={styles.breaktitle} >RECENT BREAKS</h3>
+      <h4 className={styles.breaktitlee}>
+        Real-time update of employees' recent breaks
       </h4>
 
-      <div style={{ display: "flex", gap: "16px" }}>
-        {/* Left Column */}
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "8px" }}>
-          {leftItems.map((item, index) => (
-            <div
-              key={index}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                borderBottom: "1px solid #eee",
-                padding: "8px 0",
-              }}
-            >
-              <p style={{ margin: 0, fontWeight: "bold", color: "#000" }}>{item.name}</p>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <div style={{ fontSize: "0.9rem", color: "#555" }}>
-                  <span>{item.id}</span>{" "}
-                  <span style={{ marginLeft: 6, fontWeight: "bold", color: "#3FC348" }}>
-                    {item.type}
-                  </span>
-                </div>
-                <div style={{ fontSize: "0.85rem", color: "#999" }}>
-                  {item.timeAgo || "1 minute ago"}
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <div className={styles.cont} >
+          {/* Left Column */}
+          <div className={styles.cont2}>
+            {leftItems.map((item) => (
+              <div
+                key={item.id}
+                className={styles.cont3}
+              >
+                <p className={styles.cont4}>{item.name}</p>
+                <div className={styles.cont5} >
+                  <div className={styles.cont6}>
+                    <span>ID:{item.id}</span>{" "}
+                    <span className={styles.cont7}>
+                      {item.type}{item.note ? `: ${item.note}` : ""}
+                    </span>
+
+                  </div>
+                  <div className={styles.cont8}>{timeAgo(item.started_at)}</div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
 
-        {/* Middle vertical border */}
-        <div style={{ width: "1px", background: "#eee" }}></div>
+          {/* Middle vertical border */}
+          <div className={styles.contb}  />
 
-        {/* Right Column */}
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "8px" }}>
-          {rightItems.map((item, index) => (
-            <div
-              key={index}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                borderBottom: "1px solid #eee",
-                padding: "8px 0",
-              }}
-            >
-              <p style={{ margin: 0, fontWeight: "bold", color: "#000" }}>{item.name}</p>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <div style={{ fontSize: "0.9rem", color: "#555" }}>
-                  <span>{item.id}</span>{" "}
-                  <span style={{ marginLeft: 6, fontWeight: "bold", color: "#3FC348" }}>
-                    {item.type}
-                  </span>
-                </div>
-                <div style={{ fontSize: "0.85rem", color: "#999" }}>
-                  {item.timeAgo || "1 minute ago"}
+          {/* Right Column */}
+          <div className={styles.cont2}>
+            {rightItems.map((item) => (
+              <div
+                key={item.id}
+                className={styles.cont3}
+              >
+                <p className={styles.cont4}>{item.name}</p>
+                <div className={styles.cont5}>
+                  <div className={styles.cont6}>
+                    <span>ID:{item.id}</span>{" "}
+                    <span className={styles.cont7}>
+                      {item.type}{item.note ? `: ${item.note}` : ""}
+                    </span>
+
+                  </div>
+                  <div className={styles.cont8}>{timeAgo(item.started_at)}</div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

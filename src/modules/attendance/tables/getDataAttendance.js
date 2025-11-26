@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
-import { reqGetAllUsersAttendance} from "@/feautures/api/attendance";
+import { reqGetAllUsersBreakSessionReport} from "@/feautures/api/attendance";
 
 export function getDataAttendance(initialFilters) {
   const [data, setData] = useState([]);
@@ -9,12 +9,12 @@ export function getDataAttendance(initialFilters) {
   const [loading, setLoading] = useState(false);
   const [filters, setFilters] = useState(initialFilters);
 
-  const fetchUsers = async (page = 1, limit = 10) => {
+  const fetchUsersBreakReport = async (page = 1, limit = 10) => {
     try {
       setLoading(true);
-      const res = await reqGetAllUsersAttendance({ page, limit });
+      const res = await reqGetAllUsersBreakSessionReport({ page, limit });
       const dataRes = res.data || res;
-      const attendance = dataRes || dataRes.data || [];
+      const attendance = dataRes.break_reports || dataRes.data?.break_reports || [];
       const pagi = dataRes.pagination || dataRes.data?.pagination || {};
 
       setData(attendance);
@@ -32,7 +32,7 @@ export function getDataAttendance(initialFilters) {
   };
 
   useEffect(() => {
-    fetchUsers(pagination.current, pagination.pageSize);
+    fetchUsersBreakReport(pagination.current, pagination.pageSize);
   }, [pagination.current, pagination.pageSize]);
 
   return {
@@ -43,7 +43,7 @@ export function getDataAttendance(initialFilters) {
     setPagination,
     filters,
     setFilters,
-    fetchUsers,
+    fetchUsersBreakReport,
     loading,
   };
 }

@@ -34,17 +34,6 @@ const AttendanceList = () => {
   const [editingUser, setEditingUser] = useState(null); // null
   const [submitLoading, setSubmitLoading] = useState(false);
 
-  // mock data (replace later with API)
-  const recentBreaks = [
-    { name: "Test01", type: "Break", id: "KH0182" },
-    { name: "Test02", type: "Toilet", id: "KH0183" },
-    { name: "Test03", type: "Break", id: "KH0182" },
-    { name: "Test04", type: "Toilet", id: "KH0183" },
-    { name: "Test05", type: "Break", id: "KH0182" },
-    { name: "Test06", type: "Toilet", id: "KH0183" },
-  ];
-
-
   const {
     listDataFilter,
     setListDataFilter,
@@ -124,7 +113,7 @@ const AttendanceList = () => {
     <div>
       {/* ---- Recent Breaks Card ---- */}
       <Card className={styles.smallCard}>
-        <RecentBreaksBox breaks={recentBreaks} />
+        <RecentBreaksBox />
       </Card>
       <Card className={styles.card} style={{ marginTop: 16 }}>  
         {/* form search */}
