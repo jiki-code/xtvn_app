@@ -19,7 +19,7 @@ const AttendanceList = () => {
   const initialFilters = {
     name: "",
     department: "",
-    role: "",
+    note: "",
     dates: [],
   };
   const [page, setPage] = useState(1); // current page
@@ -39,7 +39,7 @@ const AttendanceList = () => {
     setListDataFilter,
     pagination,
     setPagination,
-    fetchUsers,
+    fetchUsersBreakReport,
     filters,
     setFilters,
     loading,
@@ -51,18 +51,13 @@ const AttendanceList = () => {
     setPageSize(pag.pageSize);
   };
 
-  const handleAdd = () => {
-    setEditingUser(null);
-    setIsModalOpen(true);
-  };
-
   const handleClear = () => {
     setFilters(initialFilters);
-    fetchUsers(pagination.current, pagination.pageSize);
+    fetchUsersBreakReport(pagination.current, pagination.pageSize);
   };
 
   const handleSearch = (params) => {
-    const { name, department, role, dates } = params || {};
+    const { name, department, note, dates } = params || {};
     const [start, end] = dates || [];
 
     const filtered = data.filter((item) => {
@@ -73,11 +68,17 @@ const AttendanceList = () => {
         !department ||
         item.department.toLowerCase() === department.toLowerCase();
 
-      const matchRole = !role || item.role.toLowerCase() === role.toLowerCase();
+      const matchNote =
+        !note ||
+        (Array.isArray(note)
+          ? note.some(
+              (n) => n && item.note?.toLowerCase().includes(n.toLowerCase())
+            )
+          : item.note?.toLowerCase().includes(note.toLowerCase()));
 
       let matchDate = true;
       if (start && end) {
-        const itemDate = dayjs(item.createdAt);
+        const itemDate = dayjs(item.created_at);
 
         const startDate = dayjs(start).startOf("day");
         const endDate = dayjs(end).endOf("day");
@@ -88,7 +89,7 @@ const AttendanceList = () => {
           (itemDate.isAfter(startDate) && itemDate.isBefore(endDate));
       }
 
-      return matchName && matchDepartment && matchRole && matchDate;
+      return matchName && matchDepartment && matchNote && matchDate;
     });
 
     setListDataFilter(filtered);
@@ -126,7 +127,6 @@ const AttendanceList = () => {
           setPageSize={(ps) => setPagination({ ...pagination, pageSize: ps })}
           onFilter={() => handleSearch(filters)}
           onClear={handleClear}
-          onAdd={handleAdd}
           pageSizeList={pageSizeList}
         />
         <Divider className="border-t-gray-200/70! border-1.5! my-3!" />
@@ -150,7 +150,7 @@ const AttendanceList = () => {
               pagination={pagination}
               onChange={(page, pageSize) => {
                 setPagination((prev) => ({ ...prev, current: page, pageSize }));
-                fetchUsers(page, pageSize); // gọi API theo page
+                fetchUsersBreakReport(page, pageSize); // gọi API theo page
               }}
             />
           </>
