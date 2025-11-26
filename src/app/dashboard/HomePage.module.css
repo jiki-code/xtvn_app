@@ -1,0 +1,112 @@
+.checkinbtn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12;
+    color: #000;
+}
+.checkinsuccess {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+.checkinimg {
+    margin-bottom: 10px;
+}
+.checkoutSuccessbtn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12;
+    color: #000;
+}
+.break {
+    display: flex;
+    flex-direction: column;
+    gap: 12;
+    width: 100%;
+}
+.breakradiog {
+    display: flex;
+    flex-direction: column;
+    gap: 12;
+}
+.breakinput {
+    margin-top: 8px;
+    width: 100%;
+}
+.breakok {
+    display: flex;
+    justify-content: flex-end;
+}
+.confirmCheckout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20;
+    text-align: center;
+    color: #000;
+}
+.confirmCheckoutConfirm {
+    font-weight: bold;
+    text-align: center;
+    font-size: 2rem;
+}
+.confirmCheckoutConfirmt {
+    font-size: 1rem;
+    font-weight: bold;
+    margin: 0;
+}
+.popup {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12;
+}
+.breakSuccess {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12;
+    color: #000;
+}
+.breakSuccessImg {
+    margin-bottom: 10px;
+}
+.breakSuccesst {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+.dashboardd {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.dashboarddlogo {
+    margin-bottom: 35px;
+    margin-top: 35px;
+}
+
+.btncheckin {
+    font-weight: bold;
+    padding: 20px 0;
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    width: 220px;
+    text-align: center;
+}
+.btnbreak {
+    font-weight: bold;
+    padding: 20px 0;
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    width: 220px;
+    text-align: center;
+}
+.btncheckout {
+    font-weight: bold;
+    padding: 20px 60px;
+    font-size: 1.2rem;
+}

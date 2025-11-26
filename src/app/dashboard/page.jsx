@@ -5,6 +5,8 @@ import { useState, useEffect, useRef } from "react";
 import { Button, Modal, Radio, Input } from "antd";
 import TimeBox from "@/components/dashboard/TimeBox";
 import DateBox from "@/components/dashboard/DateBox";
+import styles from "./HomePage.module.css";
+
 
 import {
   reqCreateUserCheckIn,
@@ -35,6 +37,7 @@ export default function HomePage() {
   const [breakInHover, setBreakInHover] = useState(false);
   const [hover, setHover] = useState(false);
   const [breakId, setBreakId] = useState(null);
+  const [userId, setUserId] = useState(null);
 
   // ---- Refs ----
   const popupTimerRef = useRef(null);
@@ -137,6 +140,7 @@ export default function HomePage() {
 
       // Store the breakId
       setBreakId(res.data.breakId);
+      setUserId(res.data.attendanceDay.user_id);
 
       setBreakStartTime(now);
       hideModal();
@@ -160,19 +164,21 @@ export default function HomePage() {
   };
 
   const handleBreakOut = async () => {
-    if (!breakId) return alert("No active break found");
+    if (!breakId || !userId) return alert("No active break found");
     const now = new Date();
 
     try {
       // Call Break Out API
       const res = await reqCreateUserBreakOut({
-        breakId,
+        breakId: breakId,
+        userId: userId, 
       });
 
       console.log("Break Out API Response:", res);
 
       // Clear breakId since break is ended
       setBreakId(null);
+      setUserId(null);
 
       // Show success modal
       showModal({
@@ -292,29 +298,29 @@ export default function HomePage() {
     switch (modalConfig.type) {
       case "checkin":
         return (
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, color: "#000" }}>
-            <Image src="/icon/v-icon.png" alt="Success" width={90} height={90} style={{ marginBottom: 10 }} />
-            <h2 style={{ margin: 0, fontSize: "1.8rem", fontWeight: "bold" }}>Success!</h2>
+          <div className={`${styles.checkinbtn}`}>
+            <Image src="/icon/v-icon.png" alt="Success" width={90} height={90} className={`${styles.checkinimg}`} />
+            <h2 className={`${styles.checkinsuccess}`}>Success!</h2>
             <p>You have successfully checked in.</p>
             <ModalOkButton onOk={modalConfig.onOk} />
           </div>
         );
       case "checkoutSuccess":
         return (
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, color: "#000" }}>
-            <Image src="/icon/v-icon.png" alt="Success" width={90} height={90} style={{ marginBottom: 10 }} />
-            <h2 style={{ margin: 0, fontSize: "1.8rem", fontWeight: "bold" }}>Success!</h2>
+          <div className={`${styles.checkoutSuccessbtn}`}>
+            <Image src="/icon/v-icon.png" alt="Success" width={90} height={90} className={`${styles.checkinimg}`} />
+            <h2 className={`${styles.checkinsuccess}`}>Success!</h2>
             <p>You have successfully checked out.</p>
             <ModalOkButton onOk={modalConfig.onOk} />
           </div>
         );  
       case "break":
         return (
-          <div style={{ display: "flex", flexDirection: "column", gap: 12, width: "100%" }}>
+          <div className={`${styles.break}`}>
             <Radio.Group
               onChange={(e) => setBreakType(e.target.value)}
               value={breakType}
-              style={{ display: "flex", flexDirection: "column", gap: 12 }}
+              className={`${styles.breakradiog}`}
             >
               <Radio 
                 value="personal"
@@ -325,12 +331,12 @@ export default function HomePage() {
                   placeholder="Enter reason"
                   value={breakReason}
                   onChange={(e) => setBreakReason(e.target.value)}
-                  style={{ marginTop: 8, width: "100%" }}
+                  className={`${styles.breakinput}`}
                 />
               )}
               <Radio value="toilet" className="custom-radio">Toilet</Radio>
             </Radio.Group>
-            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+            <div className={`${styles.breakok}`}>
               <ModalOkButton
                 onOk={() => {
                   if (!breakType) return; 
@@ -343,14 +349,7 @@ export default function HomePage() {
       case "confirmCheckout":
         return (
           <div 
-            style={{ 
-              display: "flex", 
-              flexDirection: "column", 
-              alignItems: "center", 
-              gap: 20, 
-              textAlign: "center", 
-              color: "#000" 
-            }}
+            className={`${styles.confirmCheckout}`}
           >
             {/* Icon */}
             {modalConfig.extraData?.icon && (
@@ -363,15 +362,11 @@ export default function HomePage() {
             )}
 
             {/* Message with multiple lines */}
-            <div style={{ 
-              fontWeight: "bold", 
-              textAlign: "center", 
-              fontSize: "2rem", 
-            }}>
+            <div className={`${styles.confirmCheckoutConfirm}`}>
               Confirm
             </div>
 
-            <div style={{ fontSize: "1rem", fontWeight: "bold", margin: 0 }}>
+            <div className={`${styles.confirmCheckoutConfirmt}`}>
               Are you sure you want to check-out?
             </div>
             <ModalOkButton onOk={modalConfig.onOk} />
@@ -380,7 +375,7 @@ export default function HomePage() {
 
       case "popup":
         return (
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
+          <div className={`${styles.popup}`}>
             <h3 style={{ color: "red" }}>{modalConfig.extraData?.message || popupMessage}</h3>
             {startCounting && <p style={{ color: "#000" }}>Missed time: {missedTime}s</p>}
             <ModalOkButton onOk={modalConfig.onOk} />
@@ -389,9 +384,9 @@ export default function HomePage() {
 
       case "breakSuccess":
         return (
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, color: "#000" }}>
-            <Image src="/icon/v-icon.png" alt="Success" width={90} height={90} style={{ marginBottom: 10 }} />
-            <h2 style={{ margin: 0, fontSize: "1.8rem", fontWeight: "bold" }}>Success!</h2>
+          <div className={`${styles.breakSuccess}`}>
+            <Image src="/icon/v-icon.png" alt="Success" width={90} height={90} className={`${styles.breakSuccessImg}`} />
+            <h2 className={`${styles.breakSuccesst}`}>Success!</h2>
             <p>Your break start time has been saved: {modalConfig.extraData?.startTime.toLocaleTimeString()}</p>
             <ModalOkButton onOk={modalConfig.onOk} />
           </div>
@@ -399,9 +394,9 @@ export default function HomePage() {
 
       case "breakEndSuccess":
         return (
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, color: "#000" }}>
-            <Image src="/icon/v-icon.png" alt="Success" width={90} height={90} style={{ marginBottom: 10 }} />
-            <h2 style={{ margin: 0, fontSize: "1.8rem", fontWeight: "bold" }}>Success!</h2>
+          <div className={`${styles.breakSuccess}`}>
+            <Image src="/icon/v-icon.png" alt="Success" width={90} height={90} className={`${styles.breakSuccessImg}`} />
+            <h2 className={`${styles.breakSuccesst}`}>Success!</h2>
             <p>
               You have successfully ended your {modalConfig.extraData?.breakType || "break"} at:{" "}
               {modalConfig.extraData?.endTime.toLocaleTimeString()}
@@ -519,12 +514,7 @@ export default function HomePage() {
   // ---- Render ----
   return (
     <div
-      style={{
-        width: "100%",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-      }}
+      className={`${styles.dashboardd}`}
     >
       {/* Logo */}
       <Image
@@ -532,7 +522,7 @@ export default function HomePage() {
         alt="Logo"
         width={100}
         height={100}
-        style={{ marginBottom: 35, marginTop: 35 }}
+        className={`${styles.dashboarddlogo}`}
       />
 
       {/* Date Box */}
@@ -541,6 +531,7 @@ export default function HomePage() {
       <TimeBox currentDay={currentDay} dayList={day} currentTime={currentTime} />
       {/* Buttons */}
       <Button
+        className={`${styles.btncheckin}`}
         style={{
           background: isCheckedIn
             ? "linear-gradient(85deg, rgba(60,108,186, 0), rgba(60, 108, 186, 0))"  
@@ -549,12 +540,6 @@ export default function HomePage() {
             : "linear-gradient(85deg, #3C6CBA, #151345)",
           border: "1px solid #fff",
           color: isCheckedIn ? "rgba(255, 234, 29, 0.5)" : "#FFEA1D",
-          fontWeight: "bold",
-          padding: "20px 0",
-          fontSize: "1.2rem",
-          marginBottom: "15px",
-          width: "220px",
-          textAlign: "center",
           cursor: isCheckedIn ? "auto" : "pointer",
         }}
         onMouseEnter={() => setCheckInHover(true)}
@@ -567,6 +552,7 @@ export default function HomePage() {
       </Button>
 
       <Button
+        className={`${styles.btnbreak}`}
         style={{
           background: isOnBreak
             ? breakInHover
@@ -577,12 +563,6 @@ export default function HomePage() {
             : "linear-gradient(75deg, #EBD97F, #9F8144)", 
           border: "1px solid #fff",
           color: isOnBreak ? "#FFFFFF" : "#000000",
-          fontWeight: "bold",
-          padding: "20px 0",
-          fontSize: "1.2rem",
-          marginBottom: "15px",
-          width: "220px",
-          textAlign: "center",
           cursor: !isCheckedIn ? "auto" : "pointer",
         }}
         onMouseEnter={() => {
@@ -606,15 +586,13 @@ export default function HomePage() {
       </Button>
       
       <Button
+        className={`${styles.btncheckout}`}
         style={{
           background: checkOutHover
               ? "linear-gradient(75deg, #9E9E9E, #9E9E9E)" 
               : "linear-gradient(75deg, #E5E5E5, #9E9E9E)", 
           border: "1px solid #fff",
           color: !isCheckedIn || isOnBreak ? "rgba(0,0,0,0.7)" : "#000",
-          fontWeight: "bold",
-          padding: "20px 60px",
-          fontSize: "1.2rem",
           cursor: !isCheckedIn || isOnBreak ? "auto" : "pointer",
         }}
         onMouseEnter={() => {
@@ -634,18 +612,6 @@ export default function HomePage() {
         title={modalConfig.title}
         onCancel={hideModal}
         centered
-        // footer={
-        //   modalConfig.type === "break" ? (
-        //     <Button type="primary" onClick={handleBreakOk} disabled={!breakType}>
-        //       OK
-        //     </Button>
-        //   ) : modalConfig.onOk ? (
-        //     undefined 
-        //   ) : null
-        // }
-        // onOk={() => {
-        //   if (modalConfig.onOk) modalConfig.onOk();
-        // }}
         footer={null}
       >
         {renderModalContent()}
