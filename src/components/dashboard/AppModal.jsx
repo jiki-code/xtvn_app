@@ -16,7 +16,7 @@ export default function AppModal({
   breakReason,
   setBreakType,
   setBreakReason,
-  handleBreakOk
+  onConfirmBreak
 }) {
 
   const ModalOkButton = ({ onOk }) => (
@@ -39,6 +39,30 @@ export default function AppModal({
             <ModalOkButton onOk={onOk} />
           </div>
         );
+      case "checkinConfirm":
+        return (
+          <div className={styles.confirmCheckout}>
+            {extraData?.icon && (
+              <Image src={extraData.icon} alt="Icon" width={65} height={65} />
+            )}
+            <div className={styles.confirmCheckoutConfirm}>Confirm</div>
+            <div className={styles.confirmCheckoutConfirmt}>
+              Are you sure you want to check-in?
+            </div>
+            <ModalOkButton onOk={onOk} />
+          </div>
+        );
+
+      case "checkinSuccess":
+         return (
+          <div className={styles.checkoutSuccessbtn}>
+            <Image src="/icon/v-icon.png" alt="Success" width={90} height={90} />
+            <h2>Success!</h2>
+            <p>You have successfully checked in.</p>
+            <ModalOkButton onOk={onOk} />
+          </div>
+        );
+  
       case "checkoutSuccess":
         return (
           <div className={styles.checkoutSuccessbtn}>
@@ -70,13 +94,14 @@ export default function AppModal({
             <div className={styles.breakok}>
               <ModalOkButton
                 onOk={() => {
-                  if (!breakType) return;
-                  handleBreakOk && handleBreakOk();
+                  if (!breakType) return alert("Please select a break type");
+                  onConfirmBreak && onConfirmBreak();  // <-- use the callback from HomePage
                 }}
               />
             </div>
           </div>
         );
+
       case "confirmCheckout":
         return (
           <div className={styles.confirmCheckout}>
