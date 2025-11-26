@@ -14,7 +14,7 @@ import {
 import { EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import styles from "../setting.module.css";
 
-export function DepartmentSettings({ departments, onAdd, onDelete, onEdit }) {
+export function DepartmentSettings({ form, departments, onAdd, onDelete, onEdit }) {
   const [newDept, setNewDept] = useState("");
   const [editable, setEditable] = useState(false);
   const handleAddClick = () => {
@@ -23,6 +23,7 @@ export function DepartmentSettings({ departments, onAdd, onDelete, onEdit }) {
     onAdd(trimmed);
     setNewDept("");
   };
+    const website = form.getFieldValue("website");
 
   return (
     <Card title="Department" className={styles.containerCard}>
@@ -80,8 +81,8 @@ export function DepartmentSettings({ departments, onAdd, onDelete, onEdit }) {
       </div>
 
       <div className="w-full flex items-center">
-        <label className="w-[100px] text-md font-semibold">Link website</label>
-        <Input className="!w-[170]" />
+        <label className="w-[90px] text-md font-semibold">Link website</label>
+        <Input value={website} className="!w-[180]" />
       </div>
     </Card>
   );
