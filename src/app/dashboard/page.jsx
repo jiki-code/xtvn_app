@@ -6,7 +6,8 @@ import { Button, Modal, Radio, Input } from "antd";
 import TimeBox from "@/components/dashboard/TimeBox";
 import DateBox from "@/components/dashboard/DateBox";
 import styles from "./HomePage.module.css";
-
+import AppModal from "@/components/dashboard/AppModal";
+import DashboardButton from "@/components/dashboard/DashboardButton";
 
 import {
   reqCreateUserCheckIn,
@@ -75,23 +76,6 @@ export default function HomePage() {
       onOk: handleCheckOut 
     });
   };
-
-  const ModalOkButton = ({ onOk }) => (
-    <Button
-      style={{
-        marginTop: 16,
-        backgroundColor: hover ? "#0045A6" : "#0162E8",
-        borderColor: hover ? "#0045A6" : "#0162E8",   
-        color: "#FFFFFF",           
-        fontWeight: "bold",
-      }}
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
-      onClick={onOk}
-    >
-      Confirm
-    </Button>
-  );
 
   // Actual check-out logic
   const handleCheckOut = async () => {
@@ -293,123 +277,6 @@ export default function HomePage() {
     setBreakReason("");
   };
 
-  // ---- Render Modal Content Dynamically ----
-  const renderModalContent = () => {
-    switch (modalConfig.type) {
-      case "checkin":
-        return (
-          <div className={`${styles.checkinbtn}`}>
-            <Image src="/icon/v-icon.png" alt="Success" width={90} height={90} className={`${styles.checkinimg}`} />
-            <h2 className={`${styles.checkinsuccess}`}>Success!</h2>
-            <p>You have successfully checked in.</p>
-            <ModalOkButton onOk={modalConfig.onOk} />
-          </div>
-        );
-      case "checkoutSuccess":
-        return (
-          <div className={`${styles.checkoutSuccessbtn}`}>
-            <Image src="/icon/v-icon.png" alt="Success" width={90} height={90} className={`${styles.checkinimg}`} />
-            <h2 className={`${styles.checkinsuccess}`}>Success!</h2>
-            <p>You have successfully checked out.</p>
-            <ModalOkButton onOk={modalConfig.onOk} />
-          </div>
-        );  
-      case "break":
-        return (
-          <div className={`${styles.break}`}>
-            <Radio.Group
-              onChange={(e) => setBreakType(e.target.value)}
-              value={breakType}
-              className={`${styles.breakradiog}`}
-            >
-              <Radio 
-                value="personal"
-                className="custom-radio"
-              >Break</Radio>
-              {breakType === "personal" && (
-                <Input
-                  placeholder="Enter reason"
-                  value={breakReason}
-                  onChange={(e) => setBreakReason(e.target.value)}
-                  className={`${styles.breakinput}`}
-                />
-              )}
-              <Radio value="toilet" className="custom-radio">Toilet</Radio>
-            </Radio.Group>
-            <div className={`${styles.breakok}`}>
-              <ModalOkButton
-                onOk={() => {
-                  if (!breakType) return; 
-                  handleBreakOk();
-                }}
-              />
-            </div>
-          </div>
-        );
-      case "confirmCheckout":
-        return (
-          <div 
-            className={`${styles.confirmCheckout}`}
-          >
-            {/* Icon */}
-            {modalConfig.extraData?.icon && (
-              <Image 
-                src={modalConfig.extraData.icon} 
-                alt="Icon" 
-                width={65}   
-                height={65} 
-              />
-            )}
-
-            {/* Message with multiple lines */}
-            <div className={`${styles.confirmCheckoutConfirm}`}>
-              Confirm
-            </div>
-
-            <div className={`${styles.confirmCheckoutConfirmt}`}>
-              Are you sure you want to check-out?
-            </div>
-            <ModalOkButton onOk={modalConfig.onOk} />
-          </div>
-        );
-
-      case "popup":
-        return (
-          <div className={`${styles.popup}`}>
-            <h3 style={{ color: "red" }}>{modalConfig.extraData?.message || popupMessage}</h3>
-            {startCounting && <p style={{ color: "#000" }}>Missed time: {missedTime}s</p>}
-            <ModalOkButton onOk={modalConfig.onOk} />
-          </div>
-        );
-
-      case "breakSuccess":
-        return (
-          <div className={`${styles.breakSuccess}`}>
-            <Image src="/icon/v-icon.png" alt="Success" width={90} height={90} className={`${styles.breakSuccessImg}`} />
-            <h2 className={`${styles.breakSuccesst}`}>Success!</h2>
-            <p>Your break start time has been saved: {modalConfig.extraData?.startTime.toLocaleTimeString()}</p>
-            <ModalOkButton onOk={modalConfig.onOk} />
-          </div>
-        );
-
-      case "breakEndSuccess":
-        return (
-          <div className={`${styles.breakSuccess}`}>
-            <Image src="/icon/v-icon.png" alt="Success" width={90} height={90} className={`${styles.breakSuccessImg}`} />
-            <h2 className={`${styles.breakSuccesst}`}>Success!</h2>
-            <p>
-              You have successfully ended your {modalConfig.extraData?.breakType || "break"} at:{" "}
-              {modalConfig.extraData?.endTime.toLocaleTimeString()}
-            </p>
-            <ModalOkButton onOk={modalConfig.onOk} />
-          </div>
-        );
-  
-      default:
-        return null;
-    }
-  };
-
   // Clock and Date update
   useEffect(() => {
     const date = new Date();
@@ -530,92 +397,41 @@ export default function HomePage() {
       {/* Time Box */}
       <TimeBox currentDay={currentDay} dayList={day} currentTime={currentTime} />
       {/* Buttons */}
-      <Button
-        className={`${styles.btncheckin}`}
-        style={{
-          background: isCheckedIn
-            ? "linear-gradient(85deg, rgba(60,108,186, 0), rgba(60, 108, 186, 0))"  
-            : checkInHover
-            ? "linear-gradient(85deg, #151345, #151345)" 
-            : "linear-gradient(85deg, #3C6CBA, #151345)",
-          border: "1px solid #fff",
-          color: isCheckedIn ? "rgba(255, 234, 29, 0.5)" : "#FFEA1D",
-          cursor: isCheckedIn ? "auto" : "pointer",
-        }}
-        onMouseEnter={() => setCheckInHover(true)}
-        onMouseLeave={() => setCheckInHover(false)}
-        onClick={() => {
-          if (!isCheckedIn) handleCheckIn(); 
-        }}
-      >
+      <DashboardButton type="checkin" onClick={() => !isCheckedIn && handleCheckIn()} isActive={isCheckedIn}>
         Check In
-      </Button>
+      </DashboardButton>
 
-      <Button
-        className={`${styles.btnbreak}`}
-        style={{
-          background: isOnBreak
-            ? breakInHover
-            ? "linear-gradient(75deg, #5E0000, #5E0000)" 
-            : "linear-gradient(75deg, #EC1C24, #5E0000)"
-            : breakInHover
-            ? "linear-gradient(85deg, #9F8144, #9F8144)" 
-            : "linear-gradient(75deg, #EBD97F, #9F8144)", 
-          border: "1px solid #fff",
-          color: isOnBreak ? "#FFFFFF" : "#000000",
-          cursor: !isCheckedIn ? "auto" : "pointer",
-        }}
-        onMouseEnter={() => {
-          if (isCheckedIn) setBreakInHover(true); 
-        }}
-        onMouseLeave={() => setBreakInHover(false)}
+      <DashboardButton
+        type="break"
         onClick={() => {
-          if (!isCheckedIn) return;
-          if (isOnBreak) {
-            handleBreakOut(); 
-          } else {
-            showModal({
-              type: "break",
-              title: "Break In Detail",
-              onOk: handleBreakOk,
-            });
-          }
+          if (!isCheckedIn) return; 
+          isOnBreak
+            ? handleBreakOut()
+            : showModal({ type: "break", title: "Break In Detail", onOk: handleBreakOk });
         }}
+        isActive={isOnBreak}
+        disabled={!isCheckedIn} // disabled if not checked in
       >
         {isOnBreak ? "Break Out" : "Break In"}
-      </Button>
-      
-      <Button
-        className={`${styles.btncheckout}`}
-        style={{
-          background: checkOutHover
-              ? "linear-gradient(75deg, #9E9E9E, #9E9E9E)" 
-              : "linear-gradient(75deg, #E5E5E5, #9E9E9E)", 
-          border: "1px solid #fff",
-          color: !isCheckedIn || isOnBreak ? "rgba(0,0,0,0.7)" : "#000",
-          cursor: !isCheckedIn || isOnBreak ? "auto" : "pointer",
-        }}
-        onMouseEnter={() => {
-          if (isCheckedIn && !isOnBreak) setCheckOutHover(true);
-        }}
-        onMouseLeave={() => setCheckOutHover(false)}
-        onClick={() => {
-          if (!isCheckedIn || isOnBreak) return; 
-          handleCheckOutClick();
-        }}
-      >
-        Check Out
-      </Button>
+      </DashboardButton>
 
-      <Modal
-        open={modalConfig.visible}
+      <DashboardButton type="checkout" onClick={() => { if (!isCheckedIn || isOnBreak) return; handleCheckOutClick(); }} isActive={isCheckedIn && !isOnBreak}>
+        Check Out
+      </DashboardButton>
+
+      <AppModal
+        visible={modalConfig.visible}
+        type={modalConfig.type}
         title={modalConfig.title}
+        extraData={modalConfig.extraData}
+        onOk={modalConfig.onOk}
         onCancel={hideModal}
-        centered
-        footer={null}
-      >
-        {renderModalContent()}
-      </Modal>
+        breakType={breakType}
+        breakReason={breakReason}
+        setBreakType={setBreakType}
+        setBreakReason={setBreakReason}
+        handleBreakOk={handleBreakOk}
+      />
     </div>
   );
 }

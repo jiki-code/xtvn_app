@@ -110,3 +110,11 @@
     padding: 20px 60px;
     font-size: 1.2rem;
 }
+.modalOkButton {
+  margin-top: 16px;
+  background-color: #0162E8;
+  border: 1px solid #0162E8;
+  color: #FFFFFF;
+  font-weight: bold;
+  cursor: pointer;
+}
