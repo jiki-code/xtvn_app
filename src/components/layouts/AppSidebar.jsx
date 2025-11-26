@@ -14,11 +14,16 @@ import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
 } from "@ant-design/icons";
+import { useAuth } from "@/hooks/useAuth";
 
 const { Sider } = Layout;
 
 const items = [
-  { key: "/dashboard", icon: <HomeOutlined />, label: <Link href="/dashboard">Home</Link> },
+  {
+    key: "/dashboard",
+    icon: <HomeOutlined />,
+    label: <Link href="/dashboard">Home</Link>,
+  },
   {
     key: "/activity",
     icon: <ThunderboltOutlined />,
@@ -39,7 +44,7 @@ const items = [
     icon: <UserOutlined />,
     label: <Link href="/policies">Company Policies</Link>,
   },
-    {
+  {
     key: "/setting",
     icon: <SettingOutlined />,
     label: <Link href="/setting">Settings</Link>,
@@ -54,7 +59,7 @@ export default function AppSidebar({
 }) {
   const pathname = usePathname() || "/";
   const selectedKey = pathname === "/" ? "/" : `/${pathname.split("/")[1]}`;
-
+  const { user } = useAuth();
   return (
     <Sider
       //collapsible
@@ -87,7 +92,7 @@ export default function AppSidebar({
         style={{
           display: "flex",
           flexDirection: "column",
-          alignItems: "center", 
+          alignItems: "center",
           padding: "45px 0",
         }}
       >
@@ -100,19 +105,19 @@ export default function AppSidebar({
         />
         <div
           style={{
-            color: isDark ? "#fff" : "#ffffff", 
+            color: isDark ? "#fff" : "#ffffff",
             fontWeight: "bold",
-            marginTop: 12, 
+            marginTop: 12,
             textAlign: "center",
             whiteSpace: "nowrap",
           }}
         >
-          Mono
+          {user?.name}
         </div>
         <div
           style={{
-            color: isDark ? "#fff" : "#ffffff", 
-            marginTop: 2, 
+            color: isDark ? "#fff" : "#ffffff",
+            marginTop: 2,
             textAlign: "center",
             whiteSpace: "nowrap",
           }}
