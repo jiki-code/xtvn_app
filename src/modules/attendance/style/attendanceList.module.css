@@ -234,3 +234,23 @@
   width: 1px;
   background: #eee;
 }
+.messageBtn {
+  background-color: #737F9E;
+  border: none;
+  width: 40px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  border-radius: 5px;
+  padding: 0 5px;
+}
+.editBtn {
+  background-color: #FBBC0B;
+  border: none;
+  width: 40px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  border-radius: 5px;
+  padding: 0 5px;
+}

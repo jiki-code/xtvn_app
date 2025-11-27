@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Modal, Input } from "antd";
-const FormResetPassword = ({ open, onCancel, onSubmit }) => {
+const FormManagerNote = ({ open, onCancel, onSubmit }) => {
   const [input, setInput] = useState("");
   const handleOk = async () => {
     if (!input) return;
@@ -14,7 +14,7 @@ const FormResetPassword = ({ open, onCancel, onSubmit }) => {
       open={open}
       width={320}
       centered
-      title="Reset password"
+      title="Manager Note"
       onCancel={onCancel}
       onOk={handleOk}
       okText={"Save"}
@@ -26,11 +26,11 @@ const FormResetPassword = ({ open, onCancel, onSubmit }) => {
           onChange={(event) => {
             setInput(event.target.value);
           }}
-          placeholder="Enter New Password"
+          placeholder="Enter Note"
         />
       </div>
     </Modal>
   );
 };
 
-export default FormResetPassword;
+export default FormManagerNote;

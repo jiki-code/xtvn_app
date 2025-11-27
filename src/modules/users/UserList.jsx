@@ -290,7 +290,7 @@ const UserList = () => {
         />
         {/* reset modal */}
         <FormResetPassword
-          open={isReset}
+          //open={isReset}
           onCancel={() => {
             setIsReset(false);
           }}

@@ -27,7 +27,7 @@ export const columnsAttendance = [
     key: "user_id",
     width: 160,
     align: 'center',
-    sorter: (a, b) => a.user_id.localeCompare(b.user_id),
+    //sorter: (a, b) => a.user_id.localeCompare(b.user_id),
   },
   {
     title: "Staff Name",

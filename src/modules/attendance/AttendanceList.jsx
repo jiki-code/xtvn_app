@@ -2,7 +2,12 @@
 
 import { useState } from "react";
 import { Table, Card, Button, Select, Divider, Spin } from "antd";
+import {
+  reqCreateManagerNote
+} from "@/feautures/api/attendance";
+import { EditOutlined } from "@ant-design/icons";
 import { columnsAttendance } from "./tables/_comlums";
+import FormManagerNote from "./components/FormManagerNote";
 import { toast } from "react-toastify";
 import { roleList, pageSizeList } from "@/data/common";
 import styles from "./style/attendanceList.module.css";
@@ -13,6 +18,7 @@ import { CustomPagination } from "@/components/ui/CustomPagination";
 import { Toolbar } from "./components/ToolBar";
 import { RecentBreaksBox } from "./components/RecentBreaksBox";
 import { getDataAttendance } from "./tables/getDataAttendance";
+import { SquarePen, MessageCircleMore } from "lucide-react";
 import dayjs from "dayjs";
 const AttendanceList = () => {
   // --- formSearch ---
@@ -27,11 +33,8 @@ const AttendanceList = () => {
 
   const [mode, setMode] = useState("filter");
   // modal state
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isReset, setIsReset] = useState(false);
-  const [IdUser, setIdUser] = useState(0);
-
-  const [editingUser, setEditingUser] = useState(null); // null
+  const [IdBreak, setIdBreak] = useState(0);
   const [submitLoading, setSubmitLoading] = useState(false);
 
   const {
@@ -49,6 +52,30 @@ const AttendanceList = () => {
   const handleTableChange = (pag) => {
     setPage(pag.current);
     setPageSize(pag.pageSize);
+  };
+
+  const handleManagerAddNote = async (value) => {
+    const payload = {
+      breakId: IdBreak,       
+      manager_note: value,    
+    };
+    try {
+      setSubmitLoading(true);
+      await reqCreateManagerNote(payload);
+      toast.success("Manager add note succesfully");
+      setIsReset(false);
+      fetchUsersBreakReport(page, pageSize);
+    } catch (err) {
+      toast.error(err.message);
+    } finally {
+      setSubmitLoading(false);
+    }
+  };
+
+  const onManagerNote = (id) => {
+    //console.log('test'+id)
+    setIsReset(true);
+    setIdBreak(id);
   };
 
   const handleClear = () => {
@@ -102,11 +129,30 @@ const AttendanceList = () => {
   const columns = [
     ...columnsAttendance,
     {
-      title: "View",
-      key: "view",
+      title: "Actions",
+      key: "actions",
       width: 110,
       align: "center",
-      render: () => <p className=" hover:text-blue-500">View</p>,
+      render: (_, record) => (
+        <div style={{ display: "flex", gap: "8px" }}>
+          <Button
+            type="default"
+            onClick={() => onManagerNote(record.break_id)}
+            className={styles.messageBtn}
+          >
+            <MessageCircleMore size={19} color="#fff" />
+          </Button>
+
+          <Button
+            type="default"
+            onClick={() => console.log("Delete clicked")}
+            className={styles.editBtn}
+          >
+            <SquarePen size={19} color="#fff" />
+          </Button>
+        </div>
+      )
+
     },
   ];
 
@@ -155,6 +201,15 @@ const AttendanceList = () => {
             />
           </>
         )}
+        {/* manager note modal */}
+        <FormManagerNote
+          open={isReset}
+          onCancel={() => {
+            setIsReset(false);
+          }}
+          onSubmit={handleManagerAddNote}
+          confirmLoading={submitLoading}
+        />
       </Card>
     </div>
   );
