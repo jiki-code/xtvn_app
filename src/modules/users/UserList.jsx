@@ -68,12 +68,11 @@ const UserList = () => {
       password: values.password,
       role: values.role,
       name: values.name,
-      status:  values.status,
-      department:  values.department,
+      status: values.status,
+      department: values.department,
       position: values.department,
       user_id: values.user_id,
-      status: 'active',
-
+      status: "active",
     };
     try {
       setSubmitLoading(true);
@@ -157,7 +156,7 @@ const UserList = () => {
   const columns = [
     ...columnsUser,
     {
-      title: "Position",
+      title: "Role",
       key: "role",
       width: 130,
       align: "center",

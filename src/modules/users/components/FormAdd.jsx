@@ -23,7 +23,9 @@ const UserFormModal = ({
           role: initialValues.role,
           password: initialValues.password,
           department: initialValues.department,
-          user_id: initialValues.user_id
+          user_id: initialValues.user_id,
+          position: initialValues.position
+
         });
       }
     }
