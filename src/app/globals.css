@@ -48,8 +48,12 @@ body {
 
 .ant-table-wrapper .ant-table-thead > tr > th::before {
   background-color: #e5e7eb;
+}
+
+.ant-table-thead {
   position: sticky;
   z-index: 10;
+  top: 0;
 }
 
 .ant-input-outlined {
