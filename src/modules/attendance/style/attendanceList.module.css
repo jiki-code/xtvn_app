@@ -145,3 +145,7 @@
   border-radius: 5px;
   padding: 0 5px;
 }
+
+.noBorder {
+  border-bottom: none !important;
+}
