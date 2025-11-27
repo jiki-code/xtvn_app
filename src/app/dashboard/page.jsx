@@ -131,7 +131,6 @@ export default function HomePage() {
         {isOnBreak ? "Break Out" : "Break In"}
       </DashboardButton>
 
-
       <DashboardButton
         type="checkout"
         onClick={handleCheckOut}
