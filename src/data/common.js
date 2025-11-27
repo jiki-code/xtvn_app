@@ -3,11 +3,17 @@ import dayjs from "dayjs";
 
 export const AUTH_ROUTES = ["/auth", "/register", "/404"];
 
-export const roleList = [
+export const positionList = [
   { value: "admin", label: "Admin" },
   { value: "manager", label: "Manager" },
   { value: "leader", label: "Leader" },
   { value: "user", label: "User" },
+]
+
+export const roleList = [
+  { value: "manager", label: "Manager" },
+  { value: "staff", label: "Staff" },
+  { value: "qc", label: "QC" },
 ]
 
 export const departmanList = [

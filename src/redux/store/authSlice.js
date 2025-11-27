@@ -12,6 +12,7 @@ const initialState = {
     "role": "",
     "refreshToken": "",
     "accessToken": "",
+    "user_id": ""
   },
 };
 
