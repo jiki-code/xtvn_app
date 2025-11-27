@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { Modal, Form, Input, Select } from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
-import { roleList, departmanList } from "@/data/common";
+import { roleList, departmanList, positionList } from "@/data/common";
 const UserFormModal = ({
   open,
   initialValues,
@@ -86,7 +86,15 @@ const UserFormModal = ({
             options={departmanList}
           ></Select>
         </Form.Item>
-        <Form.Item name="role" label="Position">
+        <Form.Item name="position" label="Position">
+          <Select
+            placeholder="Select position"
+            className="w-full"
+            onChange={(value) => console.log("Selected:", value)}
+            options={positionList}
+          ></Select>
+        </Form.Item>
+             <Form.Item name="role" label="Role">
           <Select
             placeholder="Select Role"
             className="w-full"
