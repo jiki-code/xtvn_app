@@ -6,7 +6,8 @@ import AppSidebar from "./AppSidebar";
 import UnsupportedDevice from "@/components/layouts/UnsupportedDevice";
 import "@/styles/app-shell.css";
 import { HeaderApp } from "./HeaderLayout";
-import {useIsDesktop} from "@/hooks/useIsDesktop"
+import { useIsDesktop } from "@/hooks/useIsDesktop";
+import { RamdomAttendanceProvider } from "../providers/RamdomAttendanceProvider";
 const { Content } = Layout;
 
 export default function AppShell({ children }) {
@@ -59,19 +60,20 @@ export default function AppShell({ children }) {
         <UnsupportedDevice />
       ) : (
         <Layout className="min-h-screen" style={{ minHeight: "100vh" }}>
+          <RamdomAttendanceProvider>
           <HeaderApp />
-
-          <AppSidebar
-            isDark={isDark}
-            onToggleTheme={toggleTheme}
-            collapsed={collapsed}
-            onToggleCollapse={toggleCollapse}
-          />
-          <Layout>
-            <Content className="page-content">
-              <div className="main-shell">{children}</div>
-            </Content>
-          </Layout>
+            <AppSidebar
+              isDark={isDark}
+              onToggleTheme={toggleTheme}
+              collapsed={collapsed}
+              onToggleCollapse={toggleCollapse}
+            />
+            <Layout>
+              <Content className="page-content">
+                <div className="main-shell">{children}</div>
+              </Content>
+            </Layout>
+          </RamdomAttendanceProvider>
         </Layout>
       )}
     </ConfigProvider>

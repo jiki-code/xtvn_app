@@ -122,7 +122,7 @@ export default function AppSidebar({
             whiteSpace: "nowrap",
           }}
         >
-          XD123456
+          {user?.user_id}
         </div>
       </div>
 
