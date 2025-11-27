@@ -391,3 +391,19 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #5a6485;
 }
+
+.ant-menu .ant-menu-item-selected {
+  color: #fff100;
+  background-color: transparent;
+}
+
+.ant-menu-submenu-selected > .ant-menu-submenu-title {
+  color: #fff100;
+  background-color: transparent !important;
+}
+
+.ant-menu-submenu-title {
+  color: #fff100 !important; 
+}
+
+
