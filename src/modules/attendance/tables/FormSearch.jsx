@@ -97,7 +97,7 @@ const FormSearch = ({ onChange, formSearch }) => {
             value={form.time ? dayjs(form.time, "HH:mm:ss") : null}
             onChange={handleTimeChange}
             format="HH:mm:ss"
-            placeholder="Select Time"
+            placeholder="Break time (hh.mm)"
           />
         </div>
       </div>
