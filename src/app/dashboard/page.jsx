@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 import styles from "./HomePage.module.css";
-
 import TimeBox from "@/components/dashboard/TimeBox";
 import DateBox from "@/components/dashboard/DateBox";
 import AppModal from "@/components/dashboard/AppModal";
@@ -34,6 +33,8 @@ export default function HomePage() {
 
   const [breakType, setBreakType] = useState(""); 
   const [breakReason, setBreakReason] = useState("");
+  const [currentBreakType, setCurrentBreakType] = useState("");
+  const [breakStartTime, setBreakStartTime] = useState(null);
 
   // Clock and Date update
   useEffect(() => {
@@ -69,11 +70,14 @@ export default function HomePage() {
 
   const handleBreakButtonClick = () => {
     if (isOnBreak) {
-      handleBreakOut();
+      // User wants Break Out → show confirmation modal
+      showModal({ type: "break_out", title: "Break Out Detail", extraData: { breakType: currentBreakType, startTime: breakStartTime } });
     } else {
+      // Normal Break In modal
       showModal({ type: "break", title: "Break In Detail" });
     }
   };
+
 
   // ---- Render ----
   return (
@@ -132,13 +136,24 @@ export default function HomePage() {
         setBreakType={setBreakType}
         breakReason={breakReason}
         setBreakReason={setBreakReason}
-        onConfirmBreak={() => {
-          handleBreakIn(breakType, breakReason);
-          setBreakType("");  
-          setBreakReason(""); 
+        onConfirmBreak={async () => {
+          if (modalConfig.type === "break") {
+            const now = new Date();
+            await handleBreakIn(breakType, breakReason);
+            setCurrentBreakType(breakType); 
+            setBreakStartTime(now); 
+            setBreakType("");
+            setBreakReason("");
+            hideModal();
+          }
+          if (modalConfig.type === "break_out") {
+            await handleBreakOut();
+            setCurrentBreakType(""); 
+            hideModal();
+          }
         }}
+        extraData={modalConfig.extraData || {}}
       />
-
     </div>
   );
 }
