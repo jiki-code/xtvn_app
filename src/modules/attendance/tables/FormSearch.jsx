@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Input, Select } from "antd";
+import { Input, Select, TimePicker } from "antd";
 import { RangeDatePicker } from "@/components/ui/RangeDatePicker";
-import { roleList, departmanList } from "@/data/common";
+import { departmanList } from "@/data/common";
+import dayjs from "dayjs";
 
 const FormSearch = ({ onChange, formSearch }) => {
   const [form, setForm] = useState(formSearch);
   const departmentOptions = [{ value: "", label: "All" }, ...departmanList];
-  const roleOptions = [{ value: "", label: "All" }, ...roleList];
 
   useEffect(() => {
     setForm(formSearch);
@@ -44,6 +44,11 @@ const FormSearch = ({ onChange, formSearch }) => {
     });
   };
 
+  const handleTimeChange = (time, timeString) => {
+    setForm((prev) => ({ ...prev, time: timeString }));
+    onChange?.({ ...form, time: timeString });
+  };
+
   return (
     <div className="pb-4">
       <div className="grid grid-cols-4 gap-3 w-full">
@@ -77,12 +82,22 @@ const FormSearch = ({ onChange, formSearch }) => {
         </div>
 
         <div className="w-full">
-          <Select
-            placeholder="All"
+          <Input
+            placeholder="Search Note"
+            value={form?.note}
+            name="note"
+            allowClear
+            onChange={handleInputChange}
             className="w-full"
-            value={form?.role}
-            onChange={handleSelectChange("role")}
-            options={roleOptions}
+          />
+        </div>
+
+        <div className="w-full">
+          <TimePicker
+            value={form.time ? dayjs(form.time, "HH:mm:ss") : null}
+            onChange={handleTimeChange}
+            format="HH:mm:ss"
+            placeholder="Select Time"
           />
         </div>
       </div>
