@@ -157,7 +157,7 @@ const UserList = () => {
   const columns = [
     ...columnsUser,
     {
-      title: "Position",
+      title: "Role",
       key: "role",
       width: 130,
       align: "center",
