@@ -3,14 +3,14 @@
   border-radius: 10px;
   border: none;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  max-height: 845px;
-  height: 830px;
+  max-height: 740px;
+  height: 720px;
 }
 
 .customTable {
   background: "#f5f5f5";
   color: "#000000";
-   max-height: 550px !important;
+   max-height: 532px !important;
   overflow-y: auto;
 }
 

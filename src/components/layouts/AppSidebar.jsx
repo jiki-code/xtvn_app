@@ -1,19 +1,11 @@
 "use client";
 
-import { Layout, Menu, Switch, Button } from "antd";
+import { Layout, Menu, Switch } from "antd";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
-import {
-  HomeOutlined,
-  ThunderboltOutlined,
-  UserOutlined,
-  SettingOutlined,
-  MoonOutlined,
-  SunOutlined,
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-} from "@ant-design/icons";
+import { HomeOutlined, SettingOutlined } from "@ant-design/icons";
+import { Earth, Calendar1, Users, FileCheck } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 
 const { Sider } = Layout;
@@ -21,27 +13,32 @@ const { Sider } = Layout;
 const items = [
   {
     key: "/dashboard",
-    icon: <HomeOutlined />,
+    icon: <HomeOutlined className="h-4 w-4" />,
     label: <Link href="/dashboard">Home</Link>,
   },
   {
-    key: "/activity",
-    icon: <ThunderboltOutlined />,
+    key: "/website",
+    icon: <Earth className="h-4 w-4" />,
     label: <Link href="/activity">Website</Link>,
   },
   {
-    key: "/user1",
-    icon: <UserOutlined />,
-    label: <Link href="/attendance">Attendances</Link>,
+    key: "group",
+    label: "Attendances",
+    icon: <Calendar1 className="h-4 w-4" />,
+    children: [
+      { key: "5", label: "Attendance Report" },
+      { key: "6", label: "Spot Check" },
+      { key: "7", label: <Link href="/attendance">Break Report</Link> },
+    ],
   },
   {
     key: "/user2",
-    icon: <UserOutlined />,
+    icon: <Users className="h-4 w-4" />,
     label: <Link href="/staff">Staff</Link>,
   },
   {
     key: "/user3",
-    icon: <UserOutlined />,
+    icon: <FileCheck className="h-4 w-4" />,
     label: <Link href="/policies">Company Policies</Link>,
   },
   {
@@ -86,7 +83,6 @@ export default function AppSidebar({
           {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
         </Button>
       </div> */}
-
       {/* Profile section */}
       <div
         style={{
@@ -125,17 +121,13 @@ export default function AppSidebar({
           {user?.user_id}
         </div>
       </div>
-
       {/* Menu */}
       <Menu
+        defaultSelectedKeys={[selectedKey]}
         mode="inline"
-        selectedKeys={[selectedKey]}
-        items={items}
         inlineCollapsed={collapsed}
-        className={`${isDark ? "menu-dark" : "menu-light"} flex-1`}
-        theme={isDark ? "dark" : "light"}
+        items={items}
       />
-
       {/* Theme switch */}
       {/* <div className="p-4 border-t border-slate-200 dark:border-slate-800">
         <div className="flex items-center justify-between">
