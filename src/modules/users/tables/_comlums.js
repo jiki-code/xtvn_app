@@ -40,13 +40,14 @@ export const columnsUser = [
     },
   },
 
-   {
+  {
     title: "Position",
     dataIndex: "position",
     key: "position",
     width: 120,
     align: 'center',
-    sorter: (a, b) => a.position.localeCompare(b.position),
+    sorter: (a, b) =>
+      (a.position || '').toLowerCase().localeCompare((b.position || '').toLowerCase()),
 
   },
 
