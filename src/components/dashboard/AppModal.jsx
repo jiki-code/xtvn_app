@@ -42,10 +42,7 @@ export default function AppModal({
       case "checkinConfirm":
         return (
           <div className={styles.confirmCheckout}>
-            {extraData?.icon && (
-              <Image src={extraData.icon} alt="Icon" width={65} height={65} />
-            )}
-            <div className={styles.confirmCheckoutConfirm}>Confirm</div>
+            <Image src="/icon/close.png" alt="Success" width={60} height={60}  />
             <div className={styles.confirmCheckoutConfirmt}>
               Are you sure you want to check-in?
             </div>
@@ -105,10 +102,7 @@ export default function AppModal({
       case "confirmCheckout":
         return (
           <div className={styles.confirmCheckout}>
-            {extraData?.icon && (
-              <Image src={extraData.icon} alt="Icon" width={65} height={65} />
-            )}
-            <div className={styles.confirmCheckoutConfirm}>Confirm</div>
+            <Image src="/icon/close.png" alt="Success" width={60} height={60}  />
             <div className={styles.confirmCheckoutConfirmt}>
               Are you sure you want to check-out?
             </div>

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Input, Select } from "antd";
+import { Input, Select, TimePicker } from "antd";
 import { RangeDatePicker } from "@/components/ui/RangeDatePicker";
 import { departmanList } from "@/data/common";
+import dayjs from "dayjs";
 
 const FormSearch = ({ onChange, formSearch }) => {
   const [form, setForm] = useState(formSearch);
@@ -41,6 +42,11 @@ const FormSearch = ({ onChange, formSearch }) => {
       ...form,
       dates: dates || [],
     });
+  };
+
+  const handleTimeChange = (time, timeString) => {
+    setForm((prev) => ({ ...prev, time: timeString }));
+    onChange?.({ ...form, time: timeString });
   };
 
   return (
@@ -83,6 +89,15 @@ const FormSearch = ({ onChange, formSearch }) => {
             allowClear
             onChange={handleInputChange}
             className="w-full"
+          />
+        </div>
+
+        <div className="w-full">
+          <TimePicker
+            value={form.time ? dayjs(form.time, "HH:mm:ss") : null}
+            onChange={handleTimeChange}
+            format="HH:mm:ss"
+            placeholder="Select Time"
           />
         </div>
       </div>

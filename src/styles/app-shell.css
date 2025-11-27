@@ -153,3 +153,6 @@ body {
 .custom-radio .ant-radio-checked .ant-radio-inner::after {
   background-color: #fff;
 }
+.ant-picker-dropdown .ant-picker-time-panel-column >li.ant-picker-time-panel-cell .ant-picker-time-panel-cell-inner {
+  color: #000;
+}

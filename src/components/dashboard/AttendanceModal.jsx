@@ -88,10 +88,8 @@ export default function AttendanceModal({
       case "confirmCheckout":
         return (
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 20, textAlign: "center", color: "#000" }}>
-            {modalConfig.extraData?.icon && (
-              <Image src={modalConfig.extraData.icon} alt="Icon" width={65} height={65} />
-            )}
-            <div style={{ fontWeight: "bold", textAlign: "center", fontSize: "2rem" }}>Confirm</div>
+            <Image src="/icon/close.png" alt="Success" width={90} height={90} style={{ marginBottom: 10 }} />
+            {/* <div style={{ fontWeight: "bold", textAlign: "center", fontSize: "2rem" }}>Confirm</div> */}
             <div style={{ fontSize: "1rem", fontWeight: "bold", margin: 0 }}>
               Are you sure you want to check-out?
             </div>
