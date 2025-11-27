@@ -70,13 +70,28 @@ export default function HomePage() {
 
   const handleBreakButtonClick = () => {
     if (isOnBreak) {
+      // Load latest values from localStorage (fix for refresh)
+      const savedType = localStorage.getItem("breakType");
+      const savedTime = localStorage.getItem("breakStartTime");
+
+      const typeToUse = savedType || currentBreakType;
+      const timeToUse = savedTime ? new Date(savedTime) : breakStartTime;
       // User wants Break Out → show confirmation modal
-      showModal({ type: "break_out", title: "Break Out Detail", extraData: { breakType: currentBreakType, startTime: breakStartTime } });
+      showModal({ type: "break_out", title: "Break Out Detail", extraData: { breakType: typeToUse, startTime: timeToUse } });
     } else {
       // Normal Break In modal
       showModal({ type: "break", title: "Break In Detail" });
     }
   };
+
+  useEffect(() => {
+    const savedType = localStorage.getItem("breakType");
+    const savedTime = localStorage.getItem("breakStartTime");
+
+    if (savedType) setCurrentBreakType(savedType);
+    if (savedTime) setBreakStartTime(new Date(savedTime));
+  }, []);
+
 
 
   // ---- Render ----
@@ -140,6 +155,8 @@ export default function HomePage() {
           if (modalConfig.type === "break") {
             const now = new Date();
             await handleBreakIn(breakType, breakReason);
+            localStorage.setItem("breakType", breakType);
+            localStorage.setItem("breakStartTime", now.toISOString());
             setCurrentBreakType(breakType); 
             setBreakStartTime(now); 
             setBreakType("");
@@ -148,6 +165,8 @@ export default function HomePage() {
           }
           if (modalConfig.type === "break_out") {
             await handleBreakOut();
+            localStorage.removeItem("breakType");
+            localStorage.removeItem("breakStartTime");
             setCurrentBreakType(""); 
             hideModal();
           }

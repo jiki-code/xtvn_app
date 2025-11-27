@@ -13,6 +13,16 @@ export default function useAttendance({ showModal, hideModal, scheduleNextPopup 
     if (checkedIn === "true") {
       setIsCheckedIn(true);
     }
+    const storedBreak = localStorage.getItem("isOnBreak");
+    const storedBreakId = localStorage.getItem("breakId");
+    const storedUserId = localStorage.getItem("userId");
+
+    if (storedBreak === "true") {
+      setIsOnBreak(true);
+      if (storedBreakId) setBreakId(storedBreakId);
+      if (storedUserId) setUserId(storedUserId);
+    }
+
   }, []);
 
   const handleCheckIn = () => {
@@ -51,6 +61,9 @@ export default function useAttendance({ showModal, hideModal, scheduleNextPopup 
           await attendanceService.checkOut();
           setIsCheckedIn(false);
           localStorage.removeItem("checkedIn");
+          localStorage.removeItem("isOnBreak");
+          localStorage.removeItem("breakId");
+          localStorage.removeItem("userId");
 
           showModal({
             type: "checkoutSuccess",
@@ -78,6 +91,10 @@ export default function useAttendance({ showModal, hideModal, scheduleNextPopup 
 
       // Set break state
       setIsOnBreak(true);
+      // SAVE BREAK STATE TO STORAGE
+      localStorage.setItem("isOnBreak", "true");
+      localStorage.setItem("breakId", res.data.breakId);
+      localStorage.setItem("userId", res.data.attendanceDay.user_id);
 
       // Close break selection modal
       hideModal?.();
@@ -105,6 +122,10 @@ export default function useAttendance({ showModal, hideModal, scheduleNextPopup 
       setIsOnBreak(false);
       setBreakId(null);
       setUserId(null);
+      // CLEAR BREAK STATE STORAGE
+      localStorage.setItem("isOnBreak", "false");
+      localStorage.removeItem("breakId");
+      localStorage.removeItem("userId");
 
       showModal({
         type: "breakEndSuccess",
