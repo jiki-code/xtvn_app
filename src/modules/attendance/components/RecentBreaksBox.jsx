@@ -65,9 +65,9 @@ export const RecentBreaksBox = () => {
         <div className={styles.cont} >
           {/* Left Column */}
           <div className={styles.cont2}>
-            {leftItems.map((item) => (
+            {leftItems.map((item, index) => (
               <div
-                key={item.id}
+                key={`${item.id}-${item.started_at}-L${index}`}
                 className={styles.cont3}
               >
                 <p className={styles.cont4}>{item.name}</p>
@@ -90,9 +90,9 @@ export const RecentBreaksBox = () => {
 
           {/* Right Column */}
           <div className={styles.cont2}>
-            {rightItems.map((item) => (
+            {rightItems.map((item, index) => (
               <div
-                key={item.id}
+                key={`${item.id}-${item.started_at}-R${index}`}
                 className={styles.cont3}
               >
                 <p className={styles.cont4}>{item.name}</p>

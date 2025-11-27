@@ -118,3 +118,15 @@
   font-weight: bold;
   cursor: pointer;
 }
+.breakOutDe {
+    color: #fff;
+    background-color: #00B9FF;
+    text-align: center;
+    border-radius: 15px;
+    padding: 20px 0;
+}
+.toiletRadio {
+    font-weight: bold; 
+    text-transform: capitalize; 
+    font-size: 1.4rem;
+}

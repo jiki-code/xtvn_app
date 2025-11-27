@@ -69,6 +69,7 @@ export default function AppModal({
             <ModalOkButton onOk={onOk} />
           </div>
         );
+
       case "break":
         return (
           <div className={styles.break}>
@@ -89,12 +90,31 @@ export default function AppModal({
               <Radio value="toilet" className="custom-radio">Toilet</Radio>
             </Radio.Group>
             <div className={styles.breakok}>
-              <ModalOkButton
-                onOk={() => {
-                  if (!breakType) return alert("Please select a break type");
-                  onConfirmBreak && onConfirmBreak();  // <-- use the callback from HomePage
-                }}
-              />
+              <ModalOkButton onOk={onConfirmBreak} />
+            </div>
+          </div>
+        );
+
+      case "break_out":
+        return (
+          <div className={styles.breakOut}>
+            <div className={styles.breakOutDe}>
+              <h2 className={styles.toiletRadio}>{extraData?.breakType || "N/A"}</h2>
+              <p>
+                {extraData?.startTime
+                  ? new Date(extraData.startTime).toLocaleString(undefined, {
+                      year: "numeric",
+                      month: "2-digit",
+                      day: "2-digit",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      second: "2-digit",
+                    })
+                  : "N/A"}
+              </p>
+            </div>
+            <div className={styles.breakok}>
+              <ModalOkButton onOk={onConfirmBreak} /> 
             </div>
           </div>
         );
@@ -137,6 +157,12 @@ export default function AppModal({
             </p>
             <ModalOkButton onOk={onOk} />
           </div>
+        );
+      case "break_out_confirm":
+        return (
+          <Modal open title={title} onOk={onConfirmBreak} onCancel={onCancel}>
+            <p>Are you sure you want to end your break?</p>
+          </Modal>
         );
       default:
         return null;

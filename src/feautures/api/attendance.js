@@ -58,5 +58,13 @@ export const reqCreateUserBreakOut = async (body) => {
   return res;
 };
 
+export const reqCreateManagerNote = async (body) => {
+  const res = await apiRequest("/break-session/update", {
+    method: "PATCH",
+    body,
+  });
+  return res;
+};
 
-export { reqGetAllUsersBreakSessionReport , reqGetAllUsersBreakSession, reqCreateUserCheckIn, reqCreateUserCheckOut, reqCreateUserBreakIn, reqCreateUserBreakOut }
+
+export { reqGetAllUsersBreakSessionReport , reqGetAllUsersBreakSession, reqCreateUserCheckIn, reqCreateUserCheckOut, reqCreateUserBreakIn, reqCreateUserBreakOut, reqCreateManagerNote }
