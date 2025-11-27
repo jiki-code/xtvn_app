@@ -30,7 +30,7 @@ export function RamdomAttendanceProvider({ children }) {
       console.log("No confirmation after 3 minutes → FAIL attendance");
       // TODO:
       closeModal();
-      window.localStorage.removeItem("attendanceLastShownMap");
+      window.localStorage.removeItem("attendanceRandom");
       alert(`You missed the roll call time ${slot.time}!`);
     }, 180000);
   };
@@ -59,11 +59,11 @@ export function RamdomAttendanceProvider({ children }) {
 
       let map = {};
       try {
-        const stored = window.localStorage.getItem("attendanceLastShownMap");
+        const stored = window.localStorage.getItem("attendanceRandom");
         if (stored) map = JSON.parse(stored) || {};
       } catch {
         map = {};
-        window.localStorage.removeItem("attendanceLastShownMap");
+        window.localStorage.removeItem("attendanceRandom");
       }
 
       for (const slot of attendanceSettings.slots) {
@@ -80,7 +80,7 @@ export function RamdomAttendanceProvider({ children }) {
           map[slot.id] = todayStr;
           openModalForSlot(slot);
           window.localStorage.setItem(
-            "attendanceLastShownMap",
+            "attendanceRandom",
             JSON.stringify(map)
           );
           break;
