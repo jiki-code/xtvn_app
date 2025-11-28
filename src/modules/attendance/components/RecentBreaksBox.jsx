@@ -65,24 +65,26 @@ export const RecentBreaksBox = () => {
         <div className={styles.cont} >
           {/* Left Column */}
           <div className={styles.cont2}>
-            {leftItems.map((item, index) => (
-              <div
-                key={`${item.id}-${item.started_at}-L${index}`}
-                className={styles.cont3}
-              >
-                <p className={styles.cont4}>{item.name}</p>
-                <div className={styles.cont5} >
-                  <div className={styles.cont6}>
-                    <span>ID:{item.id}</span>{" "}
-                    <span className={styles.cont7}>
-                      {item.type}{item.note ? `: ${item.note}` : ""}
-                    </span>
-
+            {leftItems.map((item, index) => {
+              const isLast = index === leftItems.length - 1; // check last item
+              return (
+                <div
+                  key={`${item.id}-${item.started_at}-L${index}`}
+                  className={`${styles.cont3} ${isLast ? styles.noBorder : ""}`}
+                >
+                  <p className={styles.cont4}>{item.name}</p>
+                  <div className={styles.cont5}>
+                    <div className={styles.cont6}>
+                      <span>ID:{item.id}</span>{" "}
+                      <span className={styles.cont7}>
+                        {item.type}{item.note ? `: ${item.note}` : ""}
+                      </span>
+                    </div>
+                    <div className={styles.cont8}>{timeAgo(item.started_at)}</div>
                   </div>
-                  <div className={styles.cont8}>{timeAgo(item.started_at)}</div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           {/* Middle vertical border */}
@@ -90,24 +92,26 @@ export const RecentBreaksBox = () => {
 
           {/* Right Column */}
           <div className={styles.cont2}>
-            {rightItems.map((item, index) => (
-              <div
-                key={`${item.id}-${item.started_at}-R${index}`}
-                className={styles.cont3}
-              >
-                <p className={styles.cont4}>{item.name}</p>
-                <div className={styles.cont5}>
-                  <div className={styles.cont6}>
-                    <span>ID:{item.id}</span>{" "}
-                    <span className={styles.cont7}>
-                      {item.type}{item.note ? `: ${item.note}` : ""}
-                    </span>
-
+            {rightItems.map((item, index) => {
+              const isLast = index === rightItems.length - 1; // check last item
+              return (
+                <div
+                  key={`${item.id}-${item.started_at}-R${index}`}
+                  className={`${styles.cont3} ${isLast ? styles.noBorder : ""}`}
+                >
+                  <p className={styles.cont4}>{item.name}</p>
+                  <div className={styles.cont5}>
+                    <div className={styles.cont6}>
+                      <span>ID:{item.id}</span>{" "}
+                      <span className={styles.cont7}>
+                        {item.type}{item.note ? `: ${item.note}` : ""}
+                      </span>
+                    </div>
+                    <div className={styles.cont8}>{timeAgo(item.started_at)}</div>
                   </div>
-                  <div className={styles.cont8}>{timeAgo(item.started_at)}</div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       )}

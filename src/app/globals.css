@@ -388,9 +388,9 @@ body {
 }
 
 /* Khi hover vào thumb */
-::-webkit-scrollbar-thumb:hover {
+/* ::-webkit-scrollbar-thumb:hover {
   background: #5a6485;
-}
+} */
 
 .ant-menu .ant-menu-item-selected {
   color: #fff100;

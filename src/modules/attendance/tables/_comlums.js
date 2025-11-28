@@ -56,7 +56,12 @@ export const columnsAttendance = [
     key: "break_in",
     width: 180,
     align: 'center',
-    sorter: (a, b) => a.break_in.localeCompare(b.break_in),
+    sorter: (a, b) =>
+      new Date(a.break_in).getTime() - new Date(b.break_in).getTime(),
+    render: (value) => {
+      if (!value) return "-";
+      return formatDateTimeStamp(value, true)
+    },
   },
   {
     title: "Break Out",
@@ -64,7 +69,12 @@ export const columnsAttendance = [
     key: "break_out",
     width: 180,
     align: 'center',
-    sorter: (a, b) => a.break_out.localeCompare(b.break_out),
+    sorter: (a, b) =>
+      new Date(a.break_out).getTime() - new Date(b.break_out).getTime(),
+    render: (value) => {
+      if (!value) return "-";
+      return formatDateTimeStamp(value, true)
+    },
   },
   {
     title: "Check Out",
