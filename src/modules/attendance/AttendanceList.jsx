@@ -14,11 +14,13 @@ import styles from "./style/attendanceList.module.css";
 import { cn } from "@/lib/utils";
 import { CustomSwitch } from "@/components/ui/CustomSwitch";
 import { FormSearch } from "./tables/FormSearch";
+import ExportExcelButton from "./components/ExportExcelButton";
 import { CustomPagination } from "@/components/ui/CustomPagination";
 import { Toolbar } from "./components/ToolBar";
 import { RecentBreaksBox } from "./components/RecentBreaksBox";
 import { getDataAttendance } from "./tables/getDataAttendance";
 import { SquarePen, MessageCircleMore } from "lucide-react";
+import { headerAttendance } from "./data/attendanceHeaders";
 import dayjs from "dayjs";
 const AttendanceList = () => {
   // --- formSearch ---
@@ -162,9 +164,17 @@ const AttendanceList = () => {
       <Card className={styles.smallCard}>
         <RecentBreaksBox />
       </Card>
-      <Card className={styles.card} style={{ marginTop: 16 }}>  
+      <Card className={styles.card}>  
         {/* form search */}
         <FormSearch onChange={handleFormChange} formSearch={filters} />
+        <div style={{ marginBottom: 10, textAlign: "right" }}>
+          <ExportExcelButton
+            headers={headerAttendance}
+            data={listDataFilter}
+            fileName="Attendance_list_"
+          />
+
+        </div>
         {/* group button */}
         <Toolbar
           mode={mode}
@@ -175,6 +185,7 @@ const AttendanceList = () => {
           onClear={handleClear}
           pageSizeList={pageSizeList}
         />
+        {/* <ExportBar className={styles.exportfile} /> */}
         <Divider className="border-t-gray-200/70! border-1.5! my-3!" />
         {/* table */}
         {loading ? (
