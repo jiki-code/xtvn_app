@@ -39,18 +39,9 @@ export function DepartmentSettings({ form, departments, onAdd, onDelete, onEdit 
             <Input
               value={dept}
               className="border border-gray-400/65!"
-              disabled={!editable}
               onChange={(e) => onEdit(index, e.target.value)}
               suffix={
                 <div className="flex items-center gap-2 pr-1">
-                  <Tooltip title="Edit">
-                    <EditOutlined
-                      onClick={() => setEditable(!editable)}
-                      className={`cursor-pointer text-lg hover:text-blue-200! ${
-                        editable ? "text-blue-500! " : "text-gray-500! "
-                      }`}
-                    />
-                  </Tooltip>
                   <Tooltip title="Delete">
                     <DeleteOutlined
                       onClick={() => onDelete(index)}
